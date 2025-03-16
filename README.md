@@ -31,7 +31,6 @@ import WWHUD
 import WWEventSource
 import WWSimpleAI_Ollama
 
-// MARK: - ViewController
 final class ViewController: UIViewController {
     
     @IBOutlet weak var modelTextField: UITextField!
@@ -89,7 +88,6 @@ extension ViewController: WWEventSource.Delegate {
 
 private extension ViewController {
     
-    /// 先將模型載入記憶體中
     func initLoadModelIntoMemory() async {
         
         displayHUD()
