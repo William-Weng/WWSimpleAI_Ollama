@@ -1,31 +1,10 @@
-# WWSimpleAI+Ollama
+//
+//  ViewController.swift
+//  Example
+//
+//  Created by William.Weng on 2025/3/13.
+//
 
-[![Swift-5.7](https://img.shields.io/badge/Swift-5.7-orange.svg?style=flat)](https://developer.apple.com/swift/) [![iOS-15.0](https://img.shields.io/badge/iOS-15.0-pink.svg?style=flat)](https://developer.apple.com/swift/) ![TAG](https://img.shields.io/github/v/tag/William-Weng/WWSimpleAI_Ollama) [![Swift Package Manager-SUCCESS](https://img.shields.io/badge/Swift_Package_Manager-SUCCESS-blue.svg?style=flat)](https://developer.apple.com/swift/) [![LICENSE](https://img.shields.io/badge/LICENSE-MIT-yellow.svg?style=flat)](https://developer.apple.com/swift/)
-
-## [Introduction - 簡介](https://swiftpackageindex.com/William-Weng)
-- [Simple connection to Ollama API functionality.](https://github.com/ollama/ollama/blob/main/docs/api.md)
-- [簡單連接Ollama API。](https://dribbble.com/shots/22339104-Crab-Loading-Gif)
-
-![](./Example.webp)
-
-### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
-```
-dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.0.0"))
-]
-```
-
-## [Function - 可用函式](https://william-weng.github.io/2025/01/docker容器大家一起來當鯨魚搬運工吧/)
-|函式|功能|
-|-|-|
-|configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
-|loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
-|generate(prompt:type:timeout:format:options:images:useStream:using:)|一次性回應 - 每次請求都是獨立的|
-|talk(content:type:timeout:format:useStream:options:images:tools:using:)|說話模式 - 會記住之前的對話內容|
-|chat(messages:type:format:timeout:useStream:options:images:tools:using:)|對話模式 - 會記住之前的對話內容|
-
-## [Example](https://ezgif.com/video-to-webp)
-```swift
 import UIKit
 import WWHUD
 import WWEventSource
@@ -72,6 +51,7 @@ final class ViewController: UIViewController {
     }
 }
 
+// MARK: - WWEventSourceDelegate
 extension ViewController: WWEventSource.Delegate {
     
     func serverSentEventsConnectionStatus(_ eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
@@ -87,6 +67,7 @@ extension ViewController: WWEventSource.Delegate {
     }
 }
 
+// MARK: - 小工具
 private extension ViewController {
     
     /// 先將模型載入記憶體中
@@ -104,7 +85,10 @@ private extension ViewController {
         
         WWHUD.shared.dismiss()
     }
-    
+        
+    /// 生成文本回應
+    /// - Parameters:
+    ///   - prompt: 提問文字
     func generate(prompt: String) async {
         
         displayHUD()
@@ -119,6 +103,8 @@ private extension ViewController {
         WWHUD.shared.dismiss()
     }
     
+    /// 聊天對談
+    /// - Parameter content: 提問
     func talk(content: String) async {
         
         displayHUD()
@@ -134,13 +120,17 @@ private extension ViewController {
     }
 }
 
+// MARK: - 小工具
 private extension ViewController {
     
+    /// 設定模型
     func configure() {
         guard let model = modelTextField.text else { return }
         WWSimpleAI.Ollama.configure(baseURL: baseURL, model: model)
     }
     
+    /// 顯示AI回應
+    /// - Parameter type: WWSimpleOllamaAI.ResponseType
     func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
         
         switch type {
@@ -150,19 +140,27 @@ private extension ViewController {
         }
     }
     
+    /// 顯示HUD
     func displayHUD() {
         resultTextView.text = ""
         WWHUD.shared.display()
     }
     
+    /// 顯示文字
+    /// - Parameter value: Any?
     @MainActor
     func displayText(_ value: Any?) {
         resultTextView.text = "\(value ?? "")"
     }
 }
 
+// MARK: - SSE (Server Sent Events - 單方向串流)
 private extension ViewController {
     
+    /// SSE狀態處理
+    /// - Parameters:
+    ///   - eventSource: WWEventSource
+    ///   - result: Result<WWEventSource.Constant.ConnectionStatus, any Error>
     func sseStatusAction(eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
         
         switch result {
@@ -184,6 +182,10 @@ private extension ViewController {
         }
     }
     
+    /// SSE資訊處理
+    /// - Parameters:
+    ///   - eventSource: WWEventSource
+    ///   - rawString: String
     func sseRawString(eventSource: WWEventSource, rawString: String) {
         
         guard let jsonObject = rawString._data()?._jsonObject() as? [String: Any],
@@ -200,5 +202,3 @@ private extension ViewController {
         }
     }
 }
-```
-

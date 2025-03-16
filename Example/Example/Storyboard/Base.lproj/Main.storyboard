@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Nvk-hW-CXA">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--DeepSeek-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController title="DeepSeek" id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AI" translatesAutoresizingMaskIntoConstraints="NO" id="G6a-nJ-r8e">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fll-Yf-gPA">
+                                <rect key="frame" x="26" y="222" width="362" height="362"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Fll-Yf-gPA" secondAttribute="height" id="Uct-qb-cnf"/>
+                                </constraints>
+                                <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="g7T-iN-EnA">
+                                <rect key="frame" x="26" y="600" width="362" height="139"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hP5-uY-5QG" userLabel="Generate">
+                                        <rect key="frame" x="0.0" y="0.0" width="362" height="41"/>
+                                        <color key="backgroundColor" systemColor="systemRedColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="How is the weather today?"/>
+                                        <connections>
+                                            <action selector="generateDemo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6U5-EC-Owf"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUF-OI-gcE" userLabel="Generate">
+                                        <rect key="frame" x="0.0" y="49" width="362" height="41"/>
+                                        <color key="backgroundColor" systemColor="systemTealColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="関東大震災はいつですか?"/>
+                                        <connections>
+                                            <action selector="talkDemo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hj5-Tb-Td5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TBW-Lj-4gF" userLabel="Generate">
+                                        <rect key="frame" x="0.0" y="98" width="362" height="41"/>
+                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="請寫出一首五言絕句"/>
+                                        <connections>
+                                            <action selector="generateLiveDemo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZJJ-bJ-cjy"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3PK-v5-KtF">
+                                <rect key="frame" x="26" y="167" width="362" height="39"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="deepseek-r1:7b" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="afm-Lm-QjM">
+                                        <rect key="frame" x="0.0" y="0.0" width="306" height="39"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="342-h1-kla">
+                                        <rect key="frame" x="314" y="0.0" width="48" height="39"/>
+                                        <color key="backgroundColor" red="0.0" green="0.56904578210000001" blue="0.57461684940000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="48" id="D8R-F4-Izi"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="設定"/>
+                                        <connections>
+                                            <action selector="configureModel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iVx-aI-JL6"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="hju-cA-PwL"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemYellowColor"/>
+                        <constraints>
+                            <constraint firstItem="Fll-Yf-gPA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="13w-AT-TBC"/>
+                            <constraint firstItem="g7T-iN-EnA" firstAttribute="top" secondItem="Fll-Yf-gPA" secondAttribute="bottom" constant="16" id="4hh-og-o0V"/>
+                            <constraint firstItem="G6a-nJ-r8e" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="7Eo-5O-FoR"/>
+                            <constraint firstItem="G6a-nJ-r8e" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="DPi-fe-45b"/>
+                            <constraint firstItem="G6a-nJ-r8e" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JUJ-tf-gwV"/>
+                            <constraint firstItem="3PK-v5-KtF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KCu-Co-Hyz"/>
+                            <constraint firstItem="3PK-v5-KtF" firstAttribute="width" secondItem="Fll-Yf-gPA" secondAttribute="width" id="Omm-fh-bWo"/>
+                            <constraint firstAttribute="bottom" secondItem="G6a-nJ-r8e" secondAttribute="bottom" id="iYh-g2-MXM"/>
+                            <constraint firstItem="g7T-iN-EnA" firstAttribute="width" secondItem="Fll-Yf-gPA" secondAttribute="width" id="jhB-J7-Xj9"/>
+                            <constraint firstItem="Fll-Yf-gPA" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" multiplier="0.9" id="mO5-PR-hXL"/>
+                            <constraint firstItem="Fll-Yf-gPA" firstAttribute="top" secondItem="3PK-v5-KtF" secondAttribute="bottom" constant="16" id="pCg-tU-osF"/>
+                            <constraint firstItem="g7T-iN-EnA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wtI-Lf-acy"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fll-Yf-gPA" secondAttribute="trailing" constant="26" id="zGx-QJ-FGt"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Ollama" id="ASc-YT-plj"/>
+                    <connections>
+                        <outlet property="modelTextField" destination="afm-Lm-QjM" id="WUW-vk-Hfd"/>
+                        <outlet property="resultTextView" destination="Fll-Yf-gPA" id="9Za-Kx-Yfi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1049.2753623188407" y="-2.0089285714285712"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="FxA-hc-fVT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Nvk-hW-CXA" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3XH-xz-86A">
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="oKz-bV-1Az"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IiD-PU-G8f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="139.13043478260872" y="-2.0089285714285712"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="AI" width="266.66665649414062" height="399.66665649414062"/>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
