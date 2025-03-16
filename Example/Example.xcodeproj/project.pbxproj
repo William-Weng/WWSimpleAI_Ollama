@@ -449,8 +449,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/William-Weng/WWSimpleAI_Ollama";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.2;
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		81AAC18A2D8425510061DB97 /* XCRemoteSwiftPackageReference "WWHUD" */ = {
