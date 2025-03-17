@@ -85,7 +85,7 @@ private extension ViewController {
         
         WWHUD.shared.dismiss()
     }
-        
+    
     /// 生成文本回應
     /// - Parameters:
     ///   - prompt: 提問文字

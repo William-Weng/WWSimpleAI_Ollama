@@ -1,0 +1,17 @@
+meta {
+  name: 載入模型
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://192.168.4.92:11434/api/generate
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "deepseek-r1"
+  }
+}

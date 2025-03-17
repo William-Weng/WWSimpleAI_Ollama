@@ -10,7 +10,8 @@
 		3D5C9BE92D85AF940037E78A /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 3D5C9BE82D85AF940037E78A /* WWSimpleAI_Ollama */; };
 		3DDC004F2D8675200059AE06 /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 3DDC004E2D8675200059AE06 /* WWSimpleAI_Ollama */; };
 		816F4D612D87F5FC00AE5E6B /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 816F4D602D87F5FC00AE5E6B /* WWSimpleAI_Ollama */; };
-		816F4D642D88058400AE5E6B /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 816F4D632D88058400AE5E6B /* WWSimpleAI_Ollama */; };
+		816F4D672D88066A00AE5E6B /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 816F4D662D88066A00AE5E6B /* WWSimpleAI_Ollama */; };
+		816F4D732D8829B000AE5E6B /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 816F4D722D8829B000AE5E6B /* WWSimpleAI_Ollama */; };
 		817567FC2CA2C2B400B24577 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817567FB2CA2C2B400B24577 /* AppDelegate.swift */; };
 		817568002CA2C2B400B24577 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817567FF2CA2C2B400B24577 /* ViewController.swift */; };
 		817568032CA2C2B400B24577 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 817568012CA2C2B400B24577 /* Main.storyboard */; };
@@ -23,6 +24,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		816F4D682D88296C00AE5E6B /* 一次性回應.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "一次性回應.bru"; sourceTree = "<group>"; };
+		816F4D692D88296C00AE5E6B /* 建立新模型.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "建立新模型.bru"; sourceTree = "<group>"; };
+		816F4D6A2D88296C00AE5E6B /* 聊天對談.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "聊天對談.bru"; sourceTree = "<group>"; };
+		816F4D6B2D88296C00AE5E6B /* 當前版本.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "當前版本.bru"; sourceTree = "<group>"; };
+		816F4D6C2D88296C00AE5E6B /* 載入模型.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "載入模型.bru"; sourceTree = "<group>"; };
+		816F4D6D2D88296C00AE5E6B /* 模型列表.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "模型列表.bru"; sourceTree = "<group>"; };
+		816F4D6E2D88296C00AE5E6B /* 顯示模型資訊.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "顯示模型資訊.bru"; sourceTree = "<group>"; };
+		816F4D6F2D88296C00AE5E6B /* bruno.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bruno.json; sourceTree = "<group>"; };
 		817567F82CA2C2B400B24577 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		817567FB2CA2C2B400B24577 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		817567FF2CA2C2B400B24577 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -38,7 +47,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				816F4D642D88058400AE5E6B /* WWSimpleAI_Ollama in Frameworks */,
+				816F4D732D8829B000AE5E6B /* WWSimpleAI_Ollama in Frameworks */,
+				816F4D672D88066A00AE5E6B /* WWSimpleAI_Ollama in Frameworks */,
 				816F4D612D87F5FC00AE5E6B /* WWSimpleAI_Ollama in Frameworks */,
 				3DDC004F2D8675200059AE06 /* WWSimpleAI_Ollama in Frameworks */,
 				3D5C9BE92D85AF940037E78A /* WWSimpleAI_Ollama in Frameworks */,
@@ -51,6 +61,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		816F4D702D88296C00AE5E6B /* Bruno */ = {
+			isa = PBXGroup;
+			children = (
+				816F4D682D88296C00AE5E6B /* 一次性回應.bru */,
+				816F4D692D88296C00AE5E6B /* 建立新模型.bru */,
+				816F4D6A2D88296C00AE5E6B /* 聊天對談.bru */,
+				816F4D6B2D88296C00AE5E6B /* 當前版本.bru */,
+				816F4D6C2D88296C00AE5E6B /* 載入模型.bru */,
+				816F4D6D2D88296C00AE5E6B /* 模型列表.bru */,
+				816F4D6E2D88296C00AE5E6B /* 顯示模型資訊.bru */,
+				816F4D6F2D88296C00AE5E6B /* bruno.json */,
+			);
+			path = Bruno;
+			sourceTree = "<group>";
+		};
 		817567EF2CA2C2B400B24577 = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +134,7 @@
 		817568182CA2C36400B24577 /* Material */ = {
 			isa = PBXGroup;
 			children = (
+				816F4D702D88296C00AE5E6B /* Bruno */,
 				817568042CA2C2B500B24577 /* Assets.xcassets */,
 			);
 			path = Material;
@@ -152,7 +178,8 @@
 				3DDC004E2D8675200059AE06 /* WWSimpleAI_Ollama */,
 				8194FEC42D87B1E90022F8D1 /* WWSimpleAI_Ollama */,
 				816F4D602D87F5FC00AE5E6B /* WWSimpleAI_Ollama */,
-				816F4D632D88058400AE5E6B /* WWSimpleAI_Ollama */,
+				816F4D662D88066A00AE5E6B /* WWSimpleAI_Ollama */,
+				816F4D722D8829B000AE5E6B /* WWSimpleAI_Ollama */,
 			);
 			productName = Example;
 			productReference = 817567F82CA2C2B400B24577 /* Example.app */;
@@ -185,7 +212,7 @@
 			packageReferences = (
 				81D0FA942D82D67F00918C55 /* XCRemoteSwiftPackageReference "WWEventSource" */,
 				81AAC18A2D8425510061DB97 /* XCRemoteSwiftPackageReference "WWHUD" */,
-				816F4D622D88058400AE5E6B /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */,
+				816F4D712D8829B000AE5E6B /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */,
 			);
 			productRefGroup = 817567F92CA2C2B400B24577 /* Products */;
 			projectDirPath = "";
@@ -451,12 +478,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		816F4D622D88058400AE5E6B /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */ = {
+		816F4D712D8829B000AE5E6B /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/William-Weng/WWSimpleAI_Ollama";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.1;
+				minimumVersion = 1.0.2;
 			};
 		};
 		81AAC18A2D8425510061DB97 /* XCRemoteSwiftPackageReference "WWHUD" */ = {
@@ -490,9 +517,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = WWSimpleAI_Ollama;
 		};
-		816F4D632D88058400AE5E6B /* WWSimpleAI_Ollama */ = {
+		816F4D662D88066A00AE5E6B /* WWSimpleAI_Ollama */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 816F4D622D88058400AE5E6B /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */;
+			productName = WWSimpleAI_Ollama;
+		};
+		816F4D722D8829B000AE5E6B /* WWSimpleAI_Ollama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 816F4D712D8829B000AE5E6B /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */;
 			productName = WWSimpleAI_Ollama;
 		};
 		8194FEC42D87B1E90022F8D1 /* WWSimpleAI_Ollama */ = {

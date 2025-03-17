@@ -1,0 +1,20 @@
+meta {
+  name: 建立新模型
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:11434/api/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "mario",
+    "from": "llama3.2",
+    "system": "You are Mario from Super Mario Bros.",
+    "stream": false
+  }
+}

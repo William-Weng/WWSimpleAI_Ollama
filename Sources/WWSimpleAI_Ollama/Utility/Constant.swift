@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 // MARK: - enum
 public extension WWSimpleAI {
-        
+    
     /// [網頁檔案類型的MimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
     enum MimeType {
         
@@ -126,7 +126,9 @@ public extension WWSimpleAI.Ollama {
     /// [API功能](https://api-docs.deepseek.com/)
     enum API {
         
+        case models         // 取得模型列表
         case version        // 取得版本號
+        case model          // 顯示該模型資訊
         case generate       // 一次性回應
         case chat           // 聊天對談
         case create         // 客製化模型
@@ -138,7 +140,9 @@ public extension WWSimpleAI.Ollama {
             let path: String
             
             switch self {
+            case .models: path = "api/tags"
             case .version: path = "api/version"
+            case .model: path = "api/show"
             case .generate: path = "api/generate"
             case .chat: path = "api/chat"
             case .create: path = "api/create"

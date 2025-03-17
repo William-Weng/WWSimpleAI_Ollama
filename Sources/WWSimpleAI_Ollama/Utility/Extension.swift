@@ -8,6 +8,45 @@
 import UIKit
 import UniformTypeIdentifiers
 
+// MARK: - Sequence (function)
+public extension Sequence {
+    
+    /// Array => JSON Data => [T]
+    /// - Parameter type: 要轉換成的Array類型
+    /// - Returns: [T]?
+    func _jsonClass<T: Decodable>(for type: [T].Type) -> [T]? {
+        let array = self._jsonData()?._class(type: type.self)
+        return array
+    }
+    
+    /// Array => JSON Data
+    /// - ["name","William"] => {"name","William"} => 5b226e616d65222c2257696c6c69616d225d
+    /// - Returns: Data?
+    func _jsonData(options: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
+        return JSONSerialization._data(with: self, options: options)
+    }
+}
+
+// MARK: - Dictionary (function)
+extension Dictionary {
+    
+    /// Dictionary => JSON Data
+    /// - ["name":"William"] => {"name":"William"} => 7b226e616d65223a2257696c6c69616d227d
+    /// - Parameter options: JSONSerialization.WritingOptions
+    /// - Returns: Data?
+    func _jsonData(options: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
+        return JSONSerialization._data(with: self, options: options)
+    }
+            
+    /// Dictionary => JSON Data => T
+    /// - Parameter type: 要轉換成的Dictionary類型
+    /// - Returns: [T]?
+    func _jsonClass<T: Decodable>(for type: T.Type) -> T? {
+        let dictionary = self._jsonData()?._class(type: type.self)
+        return dictionary
+    }
+}
+
 // MARK: - Collection (function)
 public extension Collection where Self.Element: UIImage {
     
@@ -65,6 +104,20 @@ public extension String {
         let data = self.data(using: encoding, allowLossyConversion: isLossyConversion)
         return data
     }
+    
+    /// [將"2021-10-26T02:48:09.946Z" => Date()](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/利用-withfractionalseconds-解析-iso-8601-帶有小數的秒-c0fa3e02ee99 )
+    /// - Parameters:
+    ///   - formatOptions: formatOptions: [ISO8601DateFormatter.Options])(https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/利用-withfractionalseconds-解析-iso-8601-帶有小數的秒-c0fa3e02ee99)
+    ///   - timeZone: TimeZone
+    /// - Returns: [Date?](https://zh.wikipedia.org/zh-tw/ISO_8601)
+    func _dateISO8601(formatOptions: ISO8601DateFormatter.Options = [.withInternetDateTime, .withFractionalSeconds], timeZone: TimeZone = .current) -> Date? {
+        
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = formatOptions
+        dateFormatter.timeZone = timeZone
+
+        return dateFormatter.date(from: self)
+    }
 }
 
 // MARK: - Data (function)
@@ -100,6 +153,35 @@ public extension Data {
         })
         
         return jsonArray
+    }
+    
+    /// Data => Class
+    /// - Parameter type: 要轉型的Type => 符合Decodable
+    /// - Returns: T => 泛型
+    func _class<T: Decodable>(type: T.Type) -> T? {
+        let modelClass = try? JSONDecoder().decode(type.self, from: self)
+        return modelClass
+    }
+}
+
+// MARK: - JSONSerialization (static function)
+public extension JSONSerialization {
+    
+    /// [JSONObject => JSON Data](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/利用-jsonserialization-印出美美縮排的-json-308c93b51643)
+    /// - ["name":"William"] => {"name":"William"} => 7b226e616d65223a2257696c6c69616d227d
+    /// - Parameters:
+    ///   - object: Any
+    ///   - options: JSONSerialization.WritingOptions
+    /// - Returns: Data?
+    static func _data(with object: Any, options: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions()) -> Data? {
+        
+        guard JSONSerialization.isValidJSONObject(object),
+              let data = try? JSONSerialization.data(withJSONObject: object, options: options)
+        else {
+            return nil
+        }
+        
+        return data
     }
 }
 

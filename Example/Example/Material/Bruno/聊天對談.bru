@@ -1,0 +1,21 @@
+meta {
+  name: 聊天對談
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://192.168.4.92:11434/api/chat
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "deepseek-r1",
+    "messages": [
+      { "role": "user", "content": "請做一首有關下雨天的五言絕句…" }
+    ],
+    "stream": true
+  }
+}

@@ -16,7 +16,7 @@ extension WWSimpleAI {
         @MainActor
         public static let shared = Ollama()
         
-        private(set) public static var baseURL = "http://localhost:11434/"
+        private(set) public static var baseURL = "http://localhost:11434"
         private(set) public static var model: String = "gemma:2b"
         private(set) public static var jpegCompressionQuality = 0.75
         
@@ -53,12 +53,87 @@ public extension WWSimpleAI.Ollama {
     func version(type: ResponseType = .string(), using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         let api = API.version
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url())
+        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url())
         
         switch result {
         case .failure(let error): return .failure(error)
         case .success(let info): return parseResponseInformation(info, api: api, forType: type, field: "version", using: encoding, separator: separator)
         }
+    }
+    
+    /// 取得已下載模型列表
+    /// - Returns: Result<[ModelInformation]?, Error>
+    func models() async -> Result<[ModelInformation], Error> {
+        
+        let api = API.models
+        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url())
+        
+        switch result {
+        case .failure(let error): return .failure(error)
+        case .success(let info):
+            
+            let httpResult = parseHttpStatusCode(info)
+            
+            switch httpResult {
+            case .failure(let error): return .failure(error)
+            case .success(let data):
+                
+                guard let dictionary = data._jsonObject() as? [String: Any],
+                      let models = dictionary["models"] as? [Any]
+                else {
+                    return .failure(CustomError.notJSONString)
+                }
+                
+                guard let modelArray = models._jsonClass(for: [ModelInformation].self),
+                      !modelArray.isEmpty
+                else {
+                    return .failure(CustomError.isEmpty)
+                }
+                
+                return .success(modelArray)
+            }
+        }
+    }
+    
+    /// 取得模型文件說明
+    /// - Parameter model: 模型名稱
+    /// - Returns: Result<ModelDocumentInformation, Error>
+    func document(model: String) async -> Result<ModelDocumentInformation, Error> {
+        
+        let api = API.model
+        
+        let json = """
+        {
+          "model": "\(model)",
+          "verbose": false
+        }
+        """
+        
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        
+        print(api.url())
+        
+        switch result {
+        case .failure(let error): return .failure(error)
+        case .success(let info):
+            
+            let httpResult = parseHttpStatusCode(info)
+            
+            switch httpResult {
+            case .failure(let error): return .failure(error)
+            case .success(let data):
+                
+                guard let dictionary = data._jsonObject() as? [String: Any],
+                      let info = dictionary._jsonClass(for: ModelDocumentInformation.self)
+                else {
+                    return .failure(CustomError.notJSONString)
+                }
+                
+                return .success(info)
+            }
+        }
+        
+        return .failure(CustomError.isEmpty)
     }
     
     /// 載入模型到記憶體的設定 - 開/關
@@ -72,7 +147,7 @@ public extension WWSimpleAI.Ollama {
     func loadIntoMemory(api: API, isLoad: Bool = true, type: ResponseType = .string() , using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         switch api {
-        case .version: return .failure(CustomError.notSupport)
+        case .model, .models, .version: return .failure(CustomError.notSupport)
         case .generate: return await loadGenerateModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .chat: return await loadChatModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .create: return .failure(CustomError.notSupport)
@@ -98,7 +173,7 @@ public extension WWSimpleAI.Ollama {
         let options = options?.value() ?? nullValue
         let images = images?._base64String(mimeType: .jpeg(compressionQuality: Self.jpegCompressionQuality))._jsonString() ?? nullValue
         
-        var json = """
+        let json = """
         {
           "model": "\(Self.model)",
           "prompt": "\(prompt)",
@@ -320,6 +395,7 @@ private extension WWSimpleAI.Ollama {
         var stringArray: [String] = []
         
         switch api {
+        case .model, .models: return .failure(CustomError.notSupport)
         case .version:
             
             jsonArray.forEach { json in
@@ -332,7 +408,7 @@ private extension WWSimpleAI.Ollama {
                 
                 stringArray.append(version)
             }
-        
+                    
         case .generate:
             
             jsonArray.forEach { json in

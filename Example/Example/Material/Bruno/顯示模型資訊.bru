@@ -1,0 +1,18 @@
+meta {
+  name: 顯示模型資訊
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:11434/api/show
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "llama3.2",
+    "verbose": false
+  }
+}
