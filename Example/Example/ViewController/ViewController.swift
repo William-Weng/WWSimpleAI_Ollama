@@ -30,7 +30,7 @@ final class ViewController: UIViewController {
     }
     
     @IBAction func talkDemo(_ sender: UIButton) {
-         Task { await talk(content: "\(sender.title(for: .normal)!)") }
+        Task { await talk(content: "\(sender.title(for: .normal)!)") }
     }
     
     @IBAction func generateLiveDemo(_ sender: UIButton) {
@@ -79,7 +79,7 @@ private extension ViewController {
         let result = await WWSimpleAI.Ollama.shared.loadIntoMemory(api: .generate)
         
         switch result {
-        case .failure(let error): displayText(error)
+        case .failure(let error): displayText(error.localizedDescription)
         case .success(let responseType): diplayResponse(type: responseType)
         }
         
@@ -96,7 +96,7 @@ private extension ViewController {
         let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt)
         
         switch result {
-        case .failure(let error): displayText(error)
+        case .failure(let error): displayText(error.localizedDescription)
         case .success(let responseType): diplayResponse(type: responseType)
         }
         
@@ -112,7 +112,7 @@ private extension ViewController {
         let result = await WWSimpleAI.Ollama.shared.talk(content: content)
         
         switch result {
-        case .failure(let error): displayText(error)
+        case .failure(let error): displayText(error.localizedDescription)
         case .success(let responseType): diplayResponse(type: responseType)
         }
         
@@ -134,7 +134,11 @@ private extension ViewController {
     func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
         
         switch type {
-        case .string(let string): displayText(string)
+        case .string(let result):
+            switch result! {
+            case .failure(let error): displayText(error.localizedDescription)
+            case .success(let string): displayText(string)
+            }
         case .data(let data): displayText(data)
         case .ndjson(let ndjson): displayText(ndjson)
         }
@@ -164,16 +168,17 @@ private extension ViewController {
     func sseStatusAction(eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
         
         switch result {
-        case .failure(_):
+        case .failure(let error):
             
             DispatchQueue.main.async { [unowned self] in
-                WWHUD.shared.dismiss();
+                WWHUD.shared.dismiss()
+                displayText(error.localizedDescription)
                 isDismiss = true
                 response = ""
             }
             
         case .success(let status):
-                        
+            
             switch status {
             case .connecting: isDismiss = false
             case .open: if !isDismiss { DispatchQueue.main.async { [unowned self] in WWHUD.shared.dismiss(); isDismiss = true }}

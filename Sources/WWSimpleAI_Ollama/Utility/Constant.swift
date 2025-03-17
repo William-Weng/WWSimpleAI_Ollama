@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 // MARK: - enum
 public extension WWSimpleAI {
-    
+        
     /// [網頁檔案類型的MimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
     enum MimeType {
         
@@ -120,16 +120,23 @@ public extension WWSimpleAI {
     }
 }
 
-// MARK: - enum
+// MARK: - typealias
 public extension WWSimpleAI.Ollama {
     
+    typealias ResponseStringResult = Result<String, Error>
+}
+
+// MARK: - enum
+public extension WWSimpleAI.Ollama {
+        
     /// [API功能](https://api-docs.deepseek.com/)
     enum API {
         
-        case generate
-        case chat
+        case generate       // 一次性回應
+        case chat           // 聊天對談
+        case create         // 客製化模型
         
-        /// 取得url
+        /// 取得完整的URL => http://localhost:11434/api/generate
         /// - Returns: String
         public func url() -> String {
             
@@ -138,6 +145,7 @@ public extension WWSimpleAI.Ollama {
             switch self {
             case .generate: path = "api/generate"
             case .chat: path = "api/chat"
+            case .create: path = "api/create"
             }
             
             return "\(WWSimpleAI.Ollama.baseURL)/\(path)"
@@ -164,9 +172,9 @@ public extension WWSimpleAI.Ollama {
     
     /// 結果回傳的格式
     enum ResponseType {
-        case string(_ string: String? = nil)
+        case string(_ result: ResponseStringResult? = nil)
         case data(_ data: Data? = nil)
-        case ndjson(_ json: [Any]? = nil)
+        case ndjson(_ jsonArray: [Any]? = nil)
     }
     
     /// 要求AI要回傳的格式敘述
@@ -214,18 +222,26 @@ public extension WWSimpleAI.Ollama {
     }
     
     /// 自定義錯誤
-    enum CustomError: Error {
+    enum CustomError: Error, LocalizedError {
         
-        case jsonString     // JSON格式編碼錯誤
-        case system         // Ollama上的錯誤訊息
+        public var errorDescription: String? { message() }
+        
+        case isEmpty                            // 回傳資訊是空的
+        case notJSONString                      // JSON格式編碼錯誤
+        case notSupport                         // 不支援該功能
+        case systemError(_ message: String)     // Ollama上的錯誤訊息
+        case httpError(_ statusCode: Int)       // HTTP上的錯誤訊息
         
         /// 錯誤訊息
         /// - Returns: String
-        public func message() -> String {
+        func message() -> String {
             
             switch self {
-            case .jsonString: return "JSON format encoding error."
-            case .system: return "System error."
+            case .isEmpty: return "Response is empty."
+            case .notJSONString: return "JSON format encoding error."
+            case .notSupport: return "Does not support this function"
+            case .systemError(let message): return message
+            case .httpError(let statusCode): return "StatusCode = \(statusCode)"
             }
         }
     }

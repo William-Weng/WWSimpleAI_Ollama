@@ -56,6 +56,7 @@ public extension WWSimpleAI.Ollama {
         switch api {
         case .generate: return await loadGenerateModelIntoMemory(isLoad, type: type, using: encoding)
         case .chat: return await loadChatModelIntoMemory(isLoad, type: type, using: encoding)
+        case .create: return .failure(CustomError.notSupport)
         }
     }
     
@@ -87,7 +88,7 @@ public extension WWSimpleAI.Ollama {
           "images": \(images)
         }
         """
-                
+        
         let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), headers: nil, httpBodyType: .string(json))
         
         switch result {
@@ -127,7 +128,7 @@ public extension WWSimpleAI.Ollama {
     /// - Returns: Result<ResponseType, Error>
     func chat(messages: [MessageInformation], type: ResponseType = .string(), timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8) async -> Result<ResponseType, Error> {
         
-        guard let _jsonString = messages._jsonString(using: encoding) else { return .failure(CustomError.jsonString) }
+        guard let _jsonString = messages._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
         
         let api = API.chat
         let format = format?.value() ?? nullValue
@@ -152,6 +153,51 @@ public extension WWSimpleAI.Ollama {
         switch result {
         case .failure(let error): return .failure(error)
         case .success(let info): return .success(parseResponseInformation(info, api: api, forType: type, field: "content", using: encoding))
+        }
+    }
+    
+    /// [建立客製化模型](https://medium.com/@simon3458/ollama-llm-model-as-a-service-introduction-d849fb6d9ced)
+    /// - Parameters:
+    ///   - newModel: 新模型名稱
+    ///   - oldModel: 要引用的舊模型名稱
+    ///   - personality: 人物設定
+    ///   - type: 回應樣式 => String / Data / JSON
+    ///   - timeout: 設定請求超時時間
+    ///   - useStream: 是否使用串流回應
+    ///   - encoding: 文字編碼
+    /// - Returns: Result<ResponseType, Error>
+    func create(newModel: String, from oldModel: String, personality: String, type: ResponseType = .string(), timeout: TimeInterval = 60, useStream: Bool = false, using encoding: String.Encoding = .utf8) async -> Result<ResponseType, Error> {
+        
+        let api = API.create
+        
+        let json = """
+        {
+          "model": "\(newModel)",
+          "from": "\(oldModel)",
+          "system": "\(personality)",
+          "stream": \(useStream)
+        }
+        """
+                
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
+        
+        switch result {
+        case .failure(let error): return .failure(error)
+        case .success(let info):
+            
+            guard let response = info.response,
+                  let data = info.data
+            else {
+                return .failure(CustomError.isEmpty)
+            }
+            
+            if (response.statusCode != 200) { return .failure(CustomError.httpError(response.statusCode)) }
+            
+            switch type {
+            case .data: return .success(.data(data))
+            case .ndjson: return .success(.ndjson(data._ndjson(using: encoding)))
+            case .string: return .success(.string(combineResponseString(api: api, data: data, field: "status")))
+            }
         }
     }
 }
@@ -224,8 +270,8 @@ private extension WWSimpleAI.Ollama {
         
         switch type {
         case .string: return .string(combineResponseString(api: api, data: data, field: field, using: encoding))
-        case .data(_): return .data(data)
-        case .ndjson(_): return .ndjson(data?._ndjson(using: encoding))
+        case .data: return .data(data)
+        case .ndjson: return .ndjson(data?._ndjson(using: encoding))
         }
     }
     
@@ -235,17 +281,19 @@ private extension WWSimpleAI.Ollama {
     ///   - data: Data?
     ///   - field: 欄位名稱 (response / content)
     ///   - encoding: String.Encoding
-    /// - Returns: String?
-    func combineResponseString(api: API, data: Data?, field: String, using encoding: String.Encoding = .utf8) -> String? {
-                
-        guard let jsonArray = data?._ndjson(using: encoding) else { return nil }
+    /// - Returns: ResponseStringResult
+    func combineResponseString(api: API, data: Data?, field: String, using encoding: String.Encoding = .utf8) -> ResponseStringResult {
+        
+        guard let jsonArray = data?._ndjson(using: encoding) else { return .failure(CustomError.notJSONString) }
         
         var string: String = ""
         
-        if let errorMessage = errorMessage(from: jsonArray.first) { return errorMessage }
+        if let errorMessage = errorMessage(from: jsonArray.first) { return .failure(CustomError.systemError(errorMessage)) }
         
         switch api {
         case .generate:
+            
+            var responseArray: [String] = []
             
             jsonArray.forEach { json in
                 
@@ -255,10 +303,14 @@ private extension WWSimpleAI.Ollama {
                     return
                 }
                 
-                string += response
+                responseArray.append(response)
             }
             
+            string = responseArray.joined()
+            
         case .chat:
+            
+            var contentArray: [String] = []
             
             jsonArray.forEach { json in
                 
@@ -269,11 +321,30 @@ private extension WWSimpleAI.Ollama {
                     return
                 }
                 
-                string += content
+                contentArray.append(content)
             }
+            
+            string = contentArray.joined()
+            
+        case .create:
+            
+            var statusArray: [String] = []
+            
+            jsonArray.forEach { json in
+                
+                guard let dict = json as? [String: Any],
+                      let status = dict[field] as? String
+                else {
+                    return
+                }
+                
+                statusArray.append(status)
+            }
+
+            string = statusArray.joined(separator: ",")
         }
         
-        return string
+        return .success(string)
     }
     
     /// 取得錯誤訊息

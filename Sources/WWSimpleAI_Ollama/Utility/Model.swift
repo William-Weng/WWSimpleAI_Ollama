@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Model
-public extension WWSimpleAI.Ollama {
+extension WWSimpleAI.Ollama {
     
     /// Chat的訊息格式 (roleType不參與Decodable)
     public class MessageInformation: Codable {
