@@ -120,18 +120,13 @@ public extension WWSimpleAI {
     }
 }
 
-// MARK: - typealias
-public extension WWSimpleAI.Ollama {
-    
-    typealias ResponseStringResult = Result<String, Error>
-}
-
 // MARK: - enum
 public extension WWSimpleAI.Ollama {
         
     /// [API功能](https://api-docs.deepseek.com/)
     enum API {
         
+        case version        // 取得版本號
         case generate       // 一次性回應
         case chat           // 聊天對談
         case create         // 客製化模型
@@ -143,6 +138,7 @@ public extension WWSimpleAI.Ollama {
             let path: String
             
             switch self {
+            case .version: path = "api/version"
             case .generate: path = "api/generate"
             case .chat: path = "api/chat"
             case .create: path = "api/create"
@@ -172,7 +168,7 @@ public extension WWSimpleAI.Ollama {
     
     /// 結果回傳的格式
     enum ResponseType {
-        case string(_ result: ResponseStringResult? = nil)
+        case string(_ string: String? = nil)
         case data(_ data: Data? = nil)
         case ndjson(_ jsonArray: [Any]? = nil)
     }
@@ -226,11 +222,11 @@ public extension WWSimpleAI.Ollama {
         
         public var errorDescription: String? { message() }
         
-        case isEmpty                            // 回傳資訊是空的
-        case notJSONString                      // JSON格式編碼錯誤
-        case notSupport                         // 不支援該功能
-        case systemError(_ message: String)     // Ollama上的錯誤訊息
-        case httpError(_ statusCode: Int)       // HTTP上的錯誤訊息
+        case isEmpty                                        // 回傳資訊是空的
+        case notJSONString                                  // JSON格式編碼錯誤
+        case notSupport                                     // 不支援該功能
+        case systemError(_ message: String)                 // Ollama上的錯誤訊息
+        case httpError(_ statusCode: Int, _ data: Data)     // HTTP上的錯誤訊息
         
         /// 錯誤訊息
         /// - Returns: String
@@ -241,7 +237,7 @@ public extension WWSimpleAI.Ollama {
             case .notJSONString: return "JSON format encoding error."
             case .notSupport: return "Does not support this function"
             case .systemError(let message): return message
-            case .httpError(let statusCode): return "StatusCode = \(statusCode)"
+            case .httpError(let statusCode, let data): return "StatusCode = \(statusCode), Message = \(data._string())"
             }
         }
     }

@@ -11,13 +11,14 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.0.2"))
 ]
 ```
 
 ## [Function - 可用函式](https://william-weng.github.io/2025/01/docker容器大家一起來當鯨魚搬運工吧/)
 |函式|功能|
 |-|-|
+|version(type:using:separator:)|取得版本號|
 |configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
 |loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
 |generate(prompt:type:timeout:format:options:images:useStream:using:)|一次性回應 - 每次請求都是獨立的|
@@ -133,6 +134,7 @@ private extension ViewController {
     }
 }
 
+// MARK: - 小工具
 private extension ViewController {
     
     func configure() {
@@ -143,11 +145,7 @@ private extension ViewController {
     func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
         
         switch type {
-        case .string(let result):
-            switch result! {
-            case .failure(let error): displayText(error.localizedDescription)
-            case .success(let string): displayText(string)
-            }
+        case .string(let string): displayText(string)
         case .data(let data): displayText(data)
         case .ndjson(let ndjson): displayText(ndjson)
         }
@@ -164,6 +162,7 @@ private extension ViewController {
     }
 }
 
+// MARK: - SSE (Server Sent Events - 單方向串流)
 private extension ViewController {
     
     func sseStatusAction(eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {

@@ -134,11 +134,7 @@ private extension ViewController {
     func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
         
         switch type {
-        case .string(let result):
-            switch result! {
-            case .failure(let error): displayText(error.localizedDescription)
-            case .success(let string): displayText(string)
-            }
+        case .string(let string): displayText(string)
         case .data(let data): displayText(data)
         case .ndjson(let ndjson): displayText(ndjson)
         }
