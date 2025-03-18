@@ -52,13 +52,12 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func loadIntoMemory(api: API, isLoad: Bool = true, type: ResponseType = .string() , using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func loadIntoMemory(api: API, isLoad: Bool = true, type: ResponseType = .string , using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         switch api {
         case .generate: return await loadGenerateModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .chat: return await loadChatModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
-        case .create: return .failure(CustomError.notSupport)
-        case .model, .models, .version, .delete, .ps, .copy, .download, .embed: return .failure(CustomError.notSupport)
+        case .create, .model, .models, .version, .delete, .ps, .copy, .download, .embed: return .failure(CustomError.notSupport)
         }
     }
     
@@ -74,7 +73,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<String?, Error>
-    func generate(prompt: String, type: ResponseType = .string(), timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func generate(prompt: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         let api = API.generate
         let format = format?.value() ?? nullValue
@@ -113,7 +112,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func talk(content: String, type: ResponseType = .string(), timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func talk(content: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         let message = MessageInformation(roleType: .user, content: content)
         return await chat(messages: [message], timeout: timeout, format: format, options: options, images: images, tools: tools, useStream: useStream, using: encoding, separator: separator)
     }
@@ -131,7 +130,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func chat(messages: [MessageInformation], type: ResponseType = .string(), timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func chat(messages: [MessageInformation], type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         guard let jsonString = messages._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
         
@@ -175,7 +174,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func create(newModel: String, from oldModel: String, personality: String, type: ResponseType = .string(), useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
+    func create(newModel: String, from oldModel: String, personality: String, type: ResponseType = .string, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
         
         let api = API.create
         
@@ -277,7 +276,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func download(model: String, type: ResponseType = .string(), timeout: TimeInterval = 60, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
+    func download(model: String, type: ResponseType = .string, timeout: TimeInterval = 60, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
         
         let api = API.download
         
@@ -317,7 +316,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<EmbeddingInformation, Error>
-    func embed(model: String, inputs: [String], type: ResponseType = .string(), timeout: TimeInterval = 60, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<EmbeddingInformation, Error> {
+    func embed(model: String, inputs: [String], type: ResponseType = .string, timeout: TimeInterval = 60, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<EmbeddingInformation, Error> {
         
         guard let jsonString = inputs._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
         
@@ -363,7 +362,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func version(type: ResponseType = .string(), using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func version(type: ResponseType = .string, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         let api = API.version
         let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url())
@@ -520,7 +519,7 @@ private extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func loadChatModelIntoMemory(_ isLoad: Bool = true, type: ResponseType = .string(), using encoding: String.Encoding, separator: String) async -> Result<ResponseType, Error> {
+    func loadChatModelIntoMemory(_ isLoad: Bool = true, type: ResponseType = .string, using encoding: String.Encoding, separator: String) async -> Result<ResponseType, Error> {
         
         let api = API.chat
         

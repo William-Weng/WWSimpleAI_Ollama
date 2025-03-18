@@ -21,7 +21,7 @@ final class ViewController: UIViewController {
     private var isDismiss = false
     private var response: String = ""
     
-    @IBAction func configureModel(_ sender: UIButton) {        
+    @IBAction func configureModel(_ sender: UIButton) {
          Task { await initLoadModelIntoMemory() }
     }
     
@@ -92,7 +92,7 @@ private extension ViewController {
         
         displayHUD()
 
-        let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt)
+        let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt, type: .string())
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)

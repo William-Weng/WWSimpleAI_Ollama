@@ -182,9 +182,15 @@ public extension WWSimpleAI.Ollama {
     
     /// 結果回傳的格式
     enum ResponseType {
+        
         case string(_ string: String? = nil)
         case data(_ data: Data? = nil)
         case ndjson(_ jsonArray: [Any]? = nil)
+        
+        /* 為了好看 - string() => string */
+        public static let string = ResponseType.string()
+        public static let data = ResponseType.data()
+        public static let ndjson = ResponseType.ndjson()
     }
     
     /// 要求AI要回傳的格式敘述
