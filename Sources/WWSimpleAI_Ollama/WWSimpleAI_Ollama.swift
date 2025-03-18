@@ -58,7 +58,7 @@ public extension WWSimpleAI.Ollama {
         case .generate: return await loadGenerateModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .chat: return await loadChatModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .create: return .failure(CustomError.notSupport)
-        case .model, .models, .version, .delete, .ps, .copy: return .failure(CustomError.notSupport)
+        case .model, .models, .version, .delete, .ps, .copy, .download: return .failure(CustomError.notSupport)
         }
     }
     
@@ -237,7 +237,7 @@ public extension WWSimpleAI.Ollama {
         }
     }
     
-    /// 複製模型
+    /// [複製模型](https://yanwei-liu.medium.com/model-context-protocol-mcp-a7d424e0f1d0)
     /// - Parameters:
     ///   - source: 來源模型名稱
     ///   - destination: 目的模型名稱
@@ -266,7 +266,46 @@ public extension WWSimpleAI.Ollama {
             case .success(_): return .success(true)
             }
         }
-
+    }
+    
+    /// [下載模型](https://github.com/exo-explore/exo)
+    /// - Parameters:
+    ///   - model: 模型名稱
+    ///   - type: 回應樣式 => String / Data / JSON
+    ///   - timeout: 設定請求超時時間
+    ///   - useStream: 是否使用串流回應
+    ///   - encoding: 文字編碼
+    ///   - separator: 分隔號
+    /// - Returns: Result<ResponseType, Error>
+    func download(model: String, type: ResponseType = .string(), timeout: TimeInterval = 600, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
+        
+        let api = API.download
+        
+        let json = """
+        {
+          "model": "\(model)",
+          "stream": \(useStream)
+        }
+        """
+        
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
+        
+        switch result {
+        case .failure(let error): return .failure(error)
+        case .success(let info):
+            
+            let httpResult = parseHttpStatusCode(info)
+            
+            switch httpResult {
+            case .failure(let error): return .failure(error)
+            case .success(let data):
+                switch type {
+                case .data: return .success(.data(data))
+                case .ndjson: return .success(.ndjson(data._ndjson(using: encoding)))
+                case .string: return combineResponseString(api: api, data: data, field: "status", using: encoding, separator: separator)
+                }
+            }
+        }
     }
 }
 
@@ -537,7 +576,7 @@ private extension WWSimpleAI.Ollama {
                 stringArray.append(content)
             }
                         
-        case .create:
+        case .create, .download:
                         
             jsonArray.forEach { json in
                 

@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.0.3"))
+    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.0.5"))
 ]
 ```
 
@@ -23,6 +23,7 @@ dependencies: [
 |document(model:isVerbose:)|取得模型文件說明|
 |copy(source:destination:)|複製模型|
 |delete(model:)|刪除已下載模型|
+|download(model:type:timeout:useStream:using:eparator:)|下載模型|
 |configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
 |loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
 |generate(prompt:type:timeout:format:options:images:useStream:using:)|一次性回應 - 每次請求都是獨立的|

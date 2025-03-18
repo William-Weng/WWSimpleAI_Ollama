@@ -1,0 +1,19 @@
+meta {
+  name: 下載模型
+  type: http
+  seq: 10
+}
+
+post {
+  url: http://127.0.0.1:11434/api/pull
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "deepseek-r1:1.5b",
+    "insecure": true,
+    "stream": true
+  }
+}

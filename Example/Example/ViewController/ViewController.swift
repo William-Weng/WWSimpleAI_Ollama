@@ -7,7 +7,6 @@
 
 import UIKit
 import WWHUD
-import WWPrint
 import WWEventSource
 import WWSimpleAI_Ollama
 
@@ -22,7 +21,7 @@ final class ViewController: UIViewController {
     private var isDismiss = false
     private var response: String = ""
     
-    @IBAction func configureModel(_ sender: UIButton) {
+    @IBAction func configureModel(_ sender: UIButton) {        
          Task { await initLoadModelIntoMemory() }
     }
     

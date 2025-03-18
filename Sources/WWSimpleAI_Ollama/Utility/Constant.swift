@@ -135,6 +135,7 @@ public extension WWSimpleAI.Ollama {
         case delete         // 刪除模型
         case copy           // 複製模型
         case ps             // 取得正在執行的模型列表
+        case download       // 下載模型
         
         /// 產生完整的URL => http://localhost:11434/api/generate
         /// - Returns: String
@@ -152,6 +153,7 @@ public extension WWSimpleAI.Ollama {
             case .delete: path = "api/delete"
             case .copy: path = "api/copy"
             case .ps: path = "api/ps"
+            case .download: path = "api/pull"
             }
             
             return "\(WWSimpleAI.Ollama.baseURL)/\(path)"

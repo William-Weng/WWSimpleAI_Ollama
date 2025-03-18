@@ -1,0 +1,18 @@
+meta {
+  name: 複製模型
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://localhost:11434/api/copy
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "source": "llama3.2",
+    "destination": "llama3.2-backup"
+  }
+}

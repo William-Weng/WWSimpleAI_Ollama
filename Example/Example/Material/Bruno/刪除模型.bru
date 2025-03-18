@@ -1,0 +1,17 @@
+meta {
+  name: 刪除模型
+  type: http
+  seq: 11
+}
+
+delete {
+  url: http://192.168.4.92:11434/api/delete
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "deepseek-r1:1.5b"
+  }
+}
