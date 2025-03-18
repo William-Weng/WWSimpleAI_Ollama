@@ -20,13 +20,15 @@ dependencies: [
 |-|-|
 |version(type:using:separator:)|取得版本號|
 |models()|取得已下載模型列表|
-|document(model:)|取得模型文件說明|
+|document(model:isVerbose:)|取得模型文件說明|
+|copy(source:destination:)|複製模型|
+|delete(model:)|刪除已下載模型|
 |configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
 |loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
 |generate(prompt:type:timeout:format:options:images:useStream:using:)|一次性回應 - 每次請求都是獨立的|
 |talk(content:type:timeout:format:useStream:options:images:tools:using:)|說話模式 - 會記住之前的對話內容|
 |chat(messages:type:format:timeout:useStream:options:images:tools:using:)|對話模式 - 會記住之前的對話內容|
-|create(newModel:from:,personality:type:timeout:useStream:using)|建立客製化模型|
+|create(newModel:from:,personality:type:useStream:using)|建立客製化模型|
 
 ## [Example](https://ezgif.com/video-to-webp)
 ```swift

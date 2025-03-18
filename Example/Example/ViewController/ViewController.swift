@@ -7,6 +7,7 @@
 
 import UIKit
 import WWHUD
+import WWPrint
 import WWEventSource
 import WWSimpleAI_Ollama
 
@@ -22,7 +23,7 @@ final class ViewController: UIViewController {
     private var response: String = ""
     
     @IBAction func configureModel(_ sender: UIButton) {
-        Task { await initLoadModelIntoMemory() }
+         Task { await initLoadModelIntoMemory() }
     }
     
     @IBAction func generateDemo(_ sender: UIButton) {
@@ -35,7 +36,6 @@ final class ViewController: UIViewController {
     
     @IBAction func generateLiveDemo(_ sender: UIButton) {
         
-        configure()
         displayHUD()
         
         let urlString = WWSimpleAI.Ollama.API.generate.url()

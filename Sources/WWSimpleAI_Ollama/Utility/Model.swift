@@ -60,7 +60,22 @@ public extension WWSimpleAI.Ollama {
     }
 }
 
+// MARK: - api/ps
+public extension WWSimpleAI.Ollama {
     
+    /// 模型細節訊息格式 => {models:[]}
+    class RunningModelInformation: Codable {
+        
+        public var name: String
+        public var model: String
+        public var expires_at: String
+        public var size: Int
+        public var size_vram: Int
+        public var digest: String
+        public var details: ModelDetailInformation
+    }
+}
+
 // MARK: - api/show
 public extension WWSimpleAI.Ollama {
     
@@ -124,7 +139,7 @@ public extension WWSimpleAI.Ollama {
         public var tokenizer_ggml_merges: [String]?
         public var tokenizer_ggml_model: String
         public var tokenizer_ggml_pre: String
-        public var tokenizer_ggml_token_type: String?
+        public var tokenizer_ggml_token_type: [Int]?
         public var tokenizer_ggml_tokens: [String]?
         
         enum CodingKeys: String, CodingKey {

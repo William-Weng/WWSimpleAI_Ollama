@@ -132,8 +132,11 @@ public extension WWSimpleAI.Ollama {
         case generate       // 一次性回應
         case chat           // 聊天對談
         case create         // 客製化模型
+        case delete         // 刪除模型
+        case copy           // 複製模型
+        case ps             // 取得正在執行的模型列表
         
-        /// 取得完整的URL => http://localhost:11434/api/generate
+        /// 產生完整的URL => http://localhost:11434/api/generate
         /// - Returns: String
         public func url() -> String {
             
@@ -146,6 +149,9 @@ public extension WWSimpleAI.Ollama {
             case .generate: path = "api/generate"
             case .chat: path = "api/chat"
             case .create: path = "api/create"
+            case .delete: path = "api/delete"
+            case .copy: path = "api/copy"
+            case .ps: path = "api/ps"
             }
             
             return "\(WWSimpleAI.Ollama.baseURL)/\(path)"

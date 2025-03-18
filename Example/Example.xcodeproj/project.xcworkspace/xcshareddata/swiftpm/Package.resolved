@@ -1,5 +1,5 @@
 {
-  "originHash" : "cabbf6f53081ef2afa7982472eae6e544d2ea072537acd6119821e51ebf2c0db",
+  "originHash" : "a58b653994deec428b5f35a95849f3dc634b90d051bbab937248471f9fc8a5b6",
   "pins" : [
     {
       "identity" : "wweventsource",
@@ -29,6 +29,15 @@
       }
     },
     {
+      "identity" : "wwprint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/William-Weng/WWPrint",
+      "state" : {
+        "revision" : "8f5928f5d36624d77f8fc563fd8e31a59cfac6b6",
+        "version" : "1.3.1"
+      }
+    },
+    {
       "identity" : "wwregularexpression",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWRegularExpression",
@@ -42,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWSimpleAI_Ollama",
       "state" : {
-        "revision" : "b2bdfb6c45e3068ca843441462c2fef816063c19",
-        "version" : "1.0.2"
+        "revision" : "20b0080e062a66a06af28b17a376e89c71b69e7b",
+        "version" : "1.0.3"
       }
     }
   ],
