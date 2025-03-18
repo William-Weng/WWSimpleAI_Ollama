@@ -17,12 +17,16 @@ final class ViewController: UIViewController {
     @IBOutlet weak var resultTextView: UITextView!
     
     private let baseURL = "http://localhost:11434"
-    
+       
     private var isDismiss = false
     private var response: String = ""
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     @IBAction func configureModel(_ sender: UIButton) {
-         Task { await initLoadModelIntoMemory() }
+        Task { await initLoadModelIntoMemory() }
     }
     
     @IBAction func generateDemo(_ sender: UIButton) {

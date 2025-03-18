@@ -307,7 +307,7 @@ public extension WWSimpleAI.Ollama {
         }
     }
     
-    /// 從模型生成嵌入文字
+    /// [從模型生成嵌入文字](https://huggingface.co/)
     /// - Parameters:
     ///   - model: 模型名稱
     ///   - inputs: 要轉換的文字
