@@ -92,7 +92,7 @@ private extension ViewController {
         
         displayHUD()
 
-        let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt, type: .string())
+        let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt)
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
