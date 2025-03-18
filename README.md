@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.0.5"))
+    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.1.0"))
 ]
 ```
 
@@ -140,7 +140,6 @@ private extension ViewController {
     }
 }
 
-// MARK: - 小工具
 private extension ViewController {
     
     func configure() {
@@ -168,7 +167,6 @@ private extension ViewController {
     }
 }
 
-// MARK: - SSE (Server Sent Events - 單方向串流)
 private extension ViewController {
     
     func sseStatusAction(eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
