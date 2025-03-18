@@ -30,6 +30,7 @@ dependencies: [
 |talk(content:type:timeout:format:useStream:options:images:tools:using:)|說話模式 - 會記住之前的對話內容|
 |chat(messages:type:format:timeout:useStream:options:images:tools:using:)|對話模式 - 會記住之前的對話內容|
 |create(newModel:from:,personality:type:useStream:using)|建立客製化模型|
+|embed(model:inputs:type:timeout:using:separator:)|從模型生成嵌入文字|
 
 ## [Example](https://ezgif.com/video-to-webp)
 ```swift

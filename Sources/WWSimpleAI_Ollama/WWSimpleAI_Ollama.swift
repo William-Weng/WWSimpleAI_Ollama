@@ -58,7 +58,7 @@ public extension WWSimpleAI.Ollama {
         case .generate: return await loadGenerateModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .chat: return await loadChatModelIntoMemory(isLoad, type: type, using: encoding, separator: separator)
         case .create: return .failure(CustomError.notSupport)
-        case .model, .models, .version, .delete, .ps, .copy, .download: return .failure(CustomError.notSupport)
+        case .model, .models, .version, .delete, .ps, .copy, .download, .embed: return .failure(CustomError.notSupport)
         }
     }
     
@@ -80,7 +80,7 @@ public extension WWSimpleAI.Ollama {
         let format = format?.value() ?? nullValue
         let options = options?.value() ?? nullValue
         let images = images?._base64String(mimeType: .jpeg(compressionQuality: Self.jpegCompressionQuality))._jsonString() ?? nullValue
-        
+                
         let json = """
         {
           "model": "\(Self.model)",
@@ -133,7 +133,7 @@ public extension WWSimpleAI.Ollama {
     /// - Returns: Result<ResponseType, Error>
     func chat(messages: [MessageInformation], type: ResponseType = .string(), timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
-        guard let _jsonString = messages._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
+        guard let jsonString = messages._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
         
         let api = API.chat
         let format = format?.value() ?? nullValue
@@ -144,7 +144,7 @@ public extension WWSimpleAI.Ollama {
         let json = """
         {
           "model": "\(Self.model)",
-          "messages": \(_jsonString),
+          "messages": \(jsonString),
           "stream": \(useStream),
           "format": \(format),
           "options": \(options),
@@ -277,7 +277,7 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func download(model: String, type: ResponseType = .string(), timeout: TimeInterval = 600, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
+    func download(model: String, type: ResponseType = .string(), timeout: TimeInterval = 60, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<ResponseType, Error> {
         
         let api = API.download
         
@@ -304,6 +304,51 @@ public extension WWSimpleAI.Ollama {
                 case .ndjson: return .success(.ndjson(data._ndjson(using: encoding)))
                 case .string: return combineResponseString(api: api, data: data, field: "status", using: encoding, separator: separator)
                 }
+            }
+        }
+    }
+    
+    /// 從模型生成嵌入文字
+    /// - Parameters:
+    ///   - model: 模型名稱
+    ///   - inputs: 要轉換的文字
+    ///   - type: 回應樣式 => String / Data / JSON
+    ///   - timeout: 設定請求超時時間
+    ///   - encoding: 文字編碼
+    ///   - separator: 分隔號
+    /// - Returns: Result<EmbeddingInformation, Error>
+    func embed(model: String, inputs: [String], type: ResponseType = .string(), timeout: TimeInterval = 60, using encoding: String.Encoding = .utf8, separator: String = ",") async -> Result<EmbeddingInformation, Error> {
+        
+        guard let jsonString = inputs._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
+        
+        let api = API.embed
+        
+        let json = """
+        {
+          "model": "\(model)",
+          "input": \(jsonString)
+        }
+        """
+        
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
+        
+        switch result {
+        case .failure(let error): return .failure(error)
+        case .success(let info):
+            
+            let httpResult = parseHttpStatusCode(info)
+            
+            switch httpResult {
+            case .failure(let error): return .failure(error)
+            case .success(let data):
+                
+                guard let jsonObject = data._jsonObject() as? [String: Any],
+                      let info = jsonObject._jsonClass(for: EmbeddingInformation.self)
+                else {
+                    return .failure(CustomError.notJSONString)
+                }
+                
+                return .success(info)
             }
         }
     }
@@ -589,7 +634,7 @@ private extension WWSimpleAI.Ollama {
                 stringArray.append(status)
             }
             
-        case .model, .models, .delete, .ps, .copy: return .failure(CustomError.notSupport)
+        case .model, .models, .delete, .ps, .copy, .embed: return .failure(CustomError.notSupport)
         }
         
         return .success(.string(stringArray.joined(separator: separator)))

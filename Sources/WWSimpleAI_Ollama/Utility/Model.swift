@@ -7,7 +7,7 @@
 
 import UIKit
 
-// MARK: - Model
+// MARK: - api/chat
 public extension WWSimpleAI.Ollama {
     
     /// Chat的訊息格式 (roleType不參與Decodable => CodingKeys)
@@ -27,6 +27,20 @@ public extension WWSimpleAI.Ollama {
             case role
             case content
         }
+    }
+}
+
+// MARK: - api/embed
+public extension WWSimpleAI.Ollama {
+    
+    /// 文字 => 數字向量的相關訊息
+    class EmbeddingInformation: Codable {
+        
+        var model: String
+        var embeddings: [[Double]]
+        var total_duration: Int
+        var load_duration: Int
+        var prompt_eval_count: Int
     }
 }
 
