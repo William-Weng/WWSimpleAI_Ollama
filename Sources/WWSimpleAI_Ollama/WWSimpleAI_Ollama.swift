@@ -73,13 +73,13 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<String?, Error>
-    func generate(prompt: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func generate(prompt: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, images: [UIImage]? = nil, options: ResponseOptions? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         let api = API.generate
         let format = format?.value() ?? nullValue
         let options = options?.value() ?? nullValue
         let images = images?._base64String(mimeType: .jpeg(compressionQuality: Self.jpegCompressionQuality))._jsonString() ?? nullValue
-                
+        
         let json = """
         {
           "model": "\(Self.model)",
@@ -112,9 +112,9 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func talk(content: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
-        let message = MessageInformation(roleType: .user, content: content)
-        return await chat(messages: [message], timeout: timeout, format: format, options: options, images: images, tools: tools, useStream: useStream, using: encoding, separator: separator)
+    func talk(content: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, images: [UIImage]? = nil, options: ResponseOptions? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+        let message = MessageInformation(roleType: .user, content: content, images: images, compressionQuality: Self.jpegCompressionQuality)
+        return await chat(messages: [message], timeout: timeout, format: format, options: options, useStream: useStream, using: encoding, separator: separator)
     }
     
     /// [對話模式 - 會記住之前的對話內容](https://github.com/ollama/ollama/blob/main/docs/api.md)
@@ -123,22 +123,20 @@ public extension WWSimpleAI.Ollama {
     ///   - type: 回應樣式 => String / Data / JSON
     ///   - timeout: 設定請求超時時間
     ///   - format: 回應樣式格式化
-    ///   - options: 其它選項
-    ///   - images: 要上傳的圖片
     ///   - tools: 要求AI的函式功能
+    ///   - options: 其它選項
     ///   - useStream: 是否使用串流回應
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
-    func chat(messages: [MessageInformation], type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, images: [UIImage]? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func chat(messages: [MessageInformation], type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, options: ResponseOptions? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         guard let jsonString = messages._jsonString(using: encoding) else { return .failure(CustomError.notJSONString) }
-        
+                
         let api = API.chat
         let format = format?.value() ?? nullValue
         let options = options?.value() ?? nullValue
         let tools = tools?.value() ?? nullValue
-        let images = images?._base64String(mimeType: .jpeg(compressionQuality: Self.jpegCompressionQuality))._jsonString() ?? nullValue
         
         let json = """
         {
@@ -147,7 +145,6 @@ public extension WWSimpleAI.Ollama {
           "stream": \(useStream),
           "format": \(format),
           "options": \(options),
-          "images": \(images),
           "tools": \(tools)
         }
         """
@@ -356,7 +353,7 @@ public extension WWSimpleAI.Ollama {
 // MARK: - 公開函式 (文件相關)
 public extension WWSimpleAI.Ollama {
     
-    /// 取得版本號
+    /// [取得版本號](https://medium.com/@turkey039/自動化-ai-真的那麼神奇-從-0-開始的-n8n-openai-實戰第一篇-8a43480369db)
     /// - Parameters:
     ///   - type: 回應樣式 => String / Data / JSON
     ///   - encoding: 文字編碼
@@ -373,7 +370,7 @@ public extension WWSimpleAI.Ollama {
         }
     }
     
-    /// 取得已下載模型列表
+    /// [取得已下載模型列表](https://ywctech.net/ml-ai/ollama-first-try/)
     /// - Returns: Result<[ModelInformation]?, Error>
     func models() async -> Result<[ModelInformation], Error> {
         
@@ -407,7 +404,7 @@ public extension WWSimpleAI.Ollama {
         }
     }
     
-    /// 取得模型文件說明
+    /// [取得模型文件說明](https://ericchang.medium.com/學習筆記-ollama讓人人自建llm成為可能-我怎麼看-525ae4443699)
     /// - Parameters:
     ///   - model: 模型名稱
     ///   - isVerbose: 是否要詳細的資料

@@ -26,10 +26,10 @@ dependencies: [
 |download(model:type:timeout:useStream:using:eparator:)|下載模型|
 |configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
 |loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
-|generate(prompt:type:timeout:format:options:images:useStream:using:)|一次性回應 - 每次請求都是獨立的|
-|talk(content:type:timeout:format:useStream:options:images:tools:using:)|說話模式 - 會記住之前的對話內容|
-|chat(messages:type:format:timeout:useStream:options:images:tools:using:)|對話模式 - 會記住之前的對話內容|
-|create(newModel:from:,personality:type:useStream:using)|建立客製化模型|
+|generate(prompt:type:timeout:format:images:options:useStream:using:)|一次性回應 - 每次請求都是獨立的|
+|talk(content:type:timeout:format:useStream:images:options:tools:using:)|說話模式 - 會記住之前的對話內容|
+|chat(messages:type:timeout:format:useStream:options:images:tools:using:)|對話模式 - 會記住之前的對話內容|
+|create(newModel:from:personality:type:useStream:using)|建立客製化模型|
 |embed(model:inputs:type:timeout:using:separator:)|從模型生成嵌入文字|
 
 ## [Example](https://ezgif.com/video-to-webp)

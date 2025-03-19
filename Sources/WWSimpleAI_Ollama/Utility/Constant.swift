@@ -167,6 +167,8 @@ public extension WWSimpleAI.Ollama {
         
         case user
         case assistant
+        case system
+        case tool
         case custom(_ name: String)
         
         /// 角色名稱
@@ -175,6 +177,8 @@ public extension WWSimpleAI.Ollama {
             switch self {
             case .user: return "user"
             case .assistant: return "assistant"
+            case .system: return "system"
+            case .tool: return "tool"
             case .custom(let name): return name
             }
         }

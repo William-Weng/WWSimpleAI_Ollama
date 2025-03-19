@@ -15,17 +15,21 @@ public extension WWSimpleAI.Ollama {
         
         var content: String
         var role: String
+        var images: [String]?
         var roleType: Role = .user
         
-        public init(roleType: Role, content: String) {
-            self.roleType = roleType
+        public init(roleType: Role, content: String, images: [UIImage]?, compressionQuality: CGFloat) {
+            
             self.role = roleType.name()
             self.content = content
+            self.images = images?._base64String(mimeType: .jpeg(compressionQuality: compressionQuality))
+            self.roleType = roleType
         }
         
         enum CodingKeys: String, CodingKey {
             case role
             case content
+            case images
         }
     }
 }
