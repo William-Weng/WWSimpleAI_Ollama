@@ -36,21 +36,9 @@ final class ViewController: UIViewController {
     @IBAction func talkDemo(_ sender: UIButton) {
         Task { await talk(content: "\(sender.title(for: .normal)!)") }
     }
-    
+        
     @IBAction func generateLiveDemo(_ sender: UIButton) {
-        
-        displayHUD()
-        
-        let urlString = WWSimpleAI.Ollama.API.generate.url()
-        let json = """
-        {
-          "model": "\(WWSimpleAI.Ollama.model)",
-          "prompt": "\(sender.title(for: .normal)!)",
-          "stream": true
-        }
-        """
-        
-        _ = WWEventSource.shared.connect(httpMethod: .POST, delegate: self, urlString: urlString, httpBodyType: .string(json))
+        liveGenerate(prompt: "\(sender.title(for: .normal)!)")
     }
 }
 
@@ -120,6 +108,25 @@ private extension ViewController {
         }
         
         WWHUD.shared.dismiss()
+    }
+    
+    /// 及時回應 (SSE)
+    /// - Parameters:
+    ///   - prompt: 提問文字
+    func liveGenerate(prompt: String) {
+        
+        displayHUD()
+        
+        let urlString = WWSimpleAI.Ollama.API.generate.url()
+        let json = """
+        {
+          "model": "\(WWSimpleAI.Ollama.model)",
+          "prompt": "\(prompt)",
+          "stream": true
+        }
+        """
+        
+        _ = WWEventSource.shared.connect(httpMethod: .POST, delegate: self, urlString: urlString, httpBodyType: .string(json))
     }
 }
 

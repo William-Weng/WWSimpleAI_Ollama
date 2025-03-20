@@ -528,7 +528,7 @@
 			repositoryURL = "https://github.com/William-Weng/WWSimpleAI_Ollama";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
+				minimumVersion = 1.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

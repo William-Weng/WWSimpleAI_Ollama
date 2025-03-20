@@ -40,127 +40,130 @@ import WWEventSource
 import WWSimpleAI_Ollama
 
 final class ViewController: UIViewController {
-    
+
     @IBOutlet weak var modelTextField: UITextField!
     @IBOutlet weak var resultTextView: UITextView!
-    
+
     private let baseURL = "http://localhost:11434"
-    
+
     private var isDismiss = false
     private var response: String = ""
-    
+
     @IBAction func configureModel(_ sender: UIButton) {
         Task { await initLoadModelIntoMemory() }
     }
-    
+
     @IBAction func generateDemo(_ sender: UIButton) {
         Task { await generate(prompt: "\(sender.title(for: .normal)!)") }
     }
-    
+
     @IBAction func talkDemo(_ sender: UIButton) {
         Task { await talk(content: "\(sender.title(for: .normal)!)") }
     }
-    
+
     @IBAction func generateLiveDemo(_ sender: UIButton) {
-        
-        configure()
-        displayHUD()
-        
-        let urlString = WWSimpleAI.Ollama.API.generate.url()
-        let json = """
-        {
-          "model": "\(WWSimpleAI.Ollama.model)",
-          "prompt": "\(sender.title(for: .normal)!)",
-          "stream": true
-        }
-        """
-        
-        _ = WWEventSource.shared.connect(httpMethod: .POST, delegate: self, urlString: urlString, httpBodyType: .string(json))
+        liveGenerate(prompt: "\(sender.title(for: .normal)!)")
     }
 }
 
 extension ViewController: WWEventSource.Delegate {
-    
+
     func serverSentEventsConnectionStatus(_ eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
         sseStatusAction(eventSource: eventSource, result: result)
     }
-    
+
     func serverSentEvents(_ eventSource: WWEventSource, rawString: String) {
         sseRawString(eventSource: eventSource, rawString: rawString)
     }
-    
+
     func serverSentEvents(_ eventSource: WWEventSource, eventValue: WWEventSource.EventValue) {
         print(eventValue)
     }
 }
 
 private extension ViewController {
-    
+
     func initLoadModelIntoMemory() async {
-        
+
         displayHUD()
         configure()
-        
+
         let result = await WWSimpleAI.Ollama.shared.loadIntoMemory(api: .generate)
-        
+
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
         case .success(let responseType): diplayResponse(type: responseType)
         }
-        
+
         WWHUD.shared.dismiss()
     }
-    
+
     func generate(prompt: String) async {
-        
+
         displayHUD()
 
         let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt)
-        
+
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
         case .success(let responseType): diplayResponse(type: responseType)
         }
-        
+
         WWHUD.shared.dismiss()
     }
-    
+
     func talk(content: String) async {
-        
+
         displayHUD()
-        
+
         let result = await WWSimpleAI.Ollama.shared.talk(content: content)
-        
+
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
         case .success(let responseType): diplayResponse(type: responseType)
         }
-        
+
         WWHUD.shared.dismiss()
     }
+
+    func liveGenerate(prompt: String) {
+
+        displayHUD()
+
+        let urlString = WWSimpleAI.Ollama.API.generate.url()
+        let json = """
+        {
+          "model": "\(WWSimpleAI.Ollama.model)",
+          "prompt": "\(prompt)",
+          "stream": true
+        }
+        """
+
+        _ = WWEventSource.shared.connect(httpMethod: .POST, delegate: self, urlString: urlString, httpBodyType: .string(json))
+        }
 }
 
 private extension ViewController {
-    
+
     func configure() {
         guard let model = modelTextField.text else { return }
         WWSimpleAI.Ollama.configure(baseURL: baseURL, model: model)
     }
-    
+
     func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
-        
+
         switch type {
         case .string(let string): displayText(string)
         case .data(let data): displayText(data)
         case .ndjson(let ndjson): displayText(ndjson)
         }
     }
-    
+
     func displayHUD() {
         resultTextView.text = ""
         WWHUD.shared.display()
     }
-    
+
     @MainActor
     func displayText(_ value: Any?) {
         resultTextView.text = "\(value ?? "")"
@@ -168,21 +171,21 @@ private extension ViewController {
 }
 
 private extension ViewController {
-    
+
     func sseStatusAction(eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
-        
+
         switch result {
         case .failure(let error):
-            
+
             DispatchQueue.main.async { [unowned self] in
                 WWHUD.shared.dismiss()
                 displayText(error.localizedDescription)
                 isDismiss = true
                 response = ""
             }
-            
+
         case .success(let status):
-            
+
             switch status {
             case .connecting: isDismiss = false
             case .open: if !isDismiss { DispatchQueue.main.async { [unowned self] in WWHUD.shared.dismiss(); isDismiss = true }}
@@ -190,17 +193,17 @@ private extension ViewController {
             }
         }
     }
-    
+
     func sseRawString(eventSource: WWEventSource, rawString: String) {
-        
+
         guard let jsonObject = rawString._data()?._jsonObject() as? [String: Any],
               let _response = jsonObject["response"] as? String
         else {
             return
         }
-        
+
         response += _response
-        
+
         DispatchQueue.main.async { [unowned self] in
             resultTextView.text = response
             resultTextView._autoScrollToBottom()
@@ -208,4 +211,3 @@ private extension ViewController {
     }
 }
 ```
-
