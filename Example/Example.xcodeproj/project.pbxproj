@@ -51,6 +51,8 @@
 		81BF3CDD2D891CA300A11987 /* 複製模型.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "複製模型.bru"; sourceTree = "<group>"; };
 		81BF3CDE2D891CA300A11987 /* 顯示模型資訊.bru */ = {isa = PBXFileReference; lastKnownFileType = text; path = "顯示模型資訊.bru"; sourceTree = "<group>"; };
 		81BF3CDF2D891CA300A11987 /* bruno.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bruno.json; sourceTree = "<group>"; };
+		81CC4EAD2D8BE22E00E0B21E /* randomMenu.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = randomMenu.py; sourceTree = "<group>"; };
+		81CC4EAE2D8BE27100E0B21E /* question.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = question.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +158,7 @@
 		817568182CA2C36400B24577 /* Material */ = {
 			isa = PBXGroup;
 			children = (
+				81CC4EAC2D8BE21E00E0B21E /* Python */,
 				816F4D702D88296C00AE5E6B /* Bruno */,
 				817568042CA2C2B500B24577 /* Assets.xcassets */,
 			);
@@ -175,6 +178,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		81CC4EAC2D8BE21E00E0B21E /* Python */ = {
+			isa = PBXGroup;
+			children = (
+				81CC4EAE2D8BE27100E0B21E /* question.csv */,
+				81CC4EAD2D8BE22E00E0B21E /* randomMenu.py */,
+			);
+			path = Python;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
