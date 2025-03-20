@@ -49,10 +49,14 @@ extension ViewController: WWEventSource.Delegate {
         sseStatusAction(eventSource: eventSource, result: result)
     }
     
-    func serverSentEvents(_ eventSource: WWEventSource, rawString: String) {
-        sseRawString(eventSource: eventSource, rawString: rawString)
+    func serverSentEventsRawString(_ eventSource: WWEventSource, result: Result<String, any Error>) {
+        
+        switch result {
+        case .failure(let error): displayText(error)
+        case .success(let rawString): sseRawString(eventSource: eventSource, rawString: rawString)
+        }
     }
-    
+        
     func serverSentEvents(_ eventSource: WWEventSource, eventValue: WWEventSource.EventValue) {
         print(eventValue)
     }

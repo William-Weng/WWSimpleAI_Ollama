@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.1.0"))
+    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.1.2"))
 ]
 ```
 
@@ -72,10 +72,14 @@ extension ViewController: WWEventSource.Delegate {
         sseStatusAction(eventSource: eventSource, result: result)
     }
 
-    func serverSentEvents(_ eventSource: WWEventSource, rawString: String) {
-        sseRawString(eventSource: eventSource, rawString: rawString)
+    func serverSentEventsRawString(_ eventSource: WWEventSource, result: Result<String, any Error>) {
+        
+        switch result {
+        case .failure(let error): displayText(error)
+        case .success(let rawString): sseRawString(eventSource: eventSource, rawString: rawString)
+        }
     }
-
+    
     func serverSentEvents(_ eventSource: WWEventSource, eventValue: WWEventSource.EventValue) {
         print(eventValue)
     }
