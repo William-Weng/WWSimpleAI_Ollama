@@ -11,11 +11,12 @@ import UIKit
 public extension WWSimpleAI.Ollama {
     
     /// Chat的訊息格式 (roleType不參與Decodable => CodingKeys)
-    class MessageInformation: Codable {
+    struct MessageInformation: Codable {
         
-        var content: String
-        var role: String
-        var images: [String]?
+        let content: String
+        let role: String
+        let images: [String]?
+        
         var roleType: Role = .user
         
         public init(roleType: Role, content: String, images: [UIImage]?, compressionQuality: CGFloat) {
@@ -38,13 +39,13 @@ public extension WWSimpleAI.Ollama {
 public extension WWSimpleAI.Ollama {
     
     /// 文字 => 數字向量的相關訊息
-    class EmbeddingInformation: Codable {
+    struct EmbeddingInformation: Codable {
         
-        var model: String
-        var embeddings: [[Double]]
-        var total_duration: Int
-        var load_duration: Int
-        var prompt_eval_count: Int
+        let model: String
+        let embeddings: [[Double]]
+        let total_duration: Int
+        let load_duration: Int
+        let prompt_eval_count: Int
     }
 }
 
@@ -52,14 +53,14 @@ public extension WWSimpleAI.Ollama {
 public extension WWSimpleAI.Ollama {
     
     /// 模型細節訊息格式 => {models:[]}
-    class ModelInformation: Codable {
+    struct ModelInformation: Codable {
         
-        public var name: String
-        public var model: String
-        public var modified_at: String
-        public var size: Int
-        public var digest: String
-        public var details: ModelDetailInformation
+        public let name: String
+        public let model: String
+        public let modified_at: String
+        public let size: Int
+        public let digest: String
+        public let details: ModelDetailInformation
                 
         /// ISO8601 => Date?
         /// - Returns: Date?
@@ -67,14 +68,14 @@ public extension WWSimpleAI.Ollama {
     }
     
     /// 模型細節訊息格式 => {models:[{details:{}}]}
-    class ModelDetailInformation: Codable {
+    struct ModelDetailInformation: Codable {
         
-        public var parent_model: String
-        public var format: String
-        public var family: String
-        public var families: [String]
-        public var parameter_size: String
-        public var quantization_level: String
+        public let parent_model: String
+        public let format: String
+        public let family: String
+        public let families: [String]
+        public let parameter_size: String
+        public let quantization_level: String
     }
 }
 
@@ -82,15 +83,15 @@ public extension WWSimpleAI.Ollama {
 public extension WWSimpleAI.Ollama {
     
     /// 模型細節訊息格式 => {models:[]}
-    class RunningModelInformation: Codable {
+    struct RunningModelInformation: Codable {
         
-        public var name: String
-        public var model: String
-        public var expires_at: String
-        public var size: Int
-        public var size_vram: Int
-        public var digest: String
-        public var details: ModelDetailInformation
+        public let name: String
+        public let model: String
+        public let expires_at: String
+        public let size: Int
+        public let size_vram: Int
+        public let digest: String
+        public let details: ModelDetailInformation
     }
 }
 
@@ -98,16 +99,16 @@ public extension WWSimpleAI.Ollama {
 public extension WWSimpleAI.Ollama {
     
     /// 模型文件說明 => {}
-    class ModelDocumentInformation: Codable {
+    struct ModelDocumentInformation: Codable {
         
-        public var license: String
-        public var modelfile: String
-        public var parameters: String
-        public var template: String
-        public var modified_at: String
+        public let license: String
+        public let modelfile: String
+        public let parameters: String
+        public let template: String
+        public let modified_at: String
         
-        public var details: ModelDocumentDetailInformation
-        public var model_info: ModelDocumentInfoInformation
+        public let details: ModelDocumentDetailInformation
+        public let model_info: ModelDocumentInfoInformation
         
         /// ISO8601 => Date?
         /// - Returns: Date?
@@ -115,50 +116,50 @@ public extension WWSimpleAI.Ollama {
     }
     
     /// 模型文件說明 => {"details""{}}
-    class ModelDocumentDetailInformation: Codable {
+    struct ModelDocumentDetailInformation: Codable {
         
-        public var parent_model: String
-        public var format: String
-        public var family: String
-        public var families: [String]
-        public var parameter_size: String
-        public var quantization_level: String
+        public let parent_model: String
+        public let format: String
+        public let family: String
+        public let families: [String]
+        public let parameter_size: String
+        public let quantization_level: String
     }
     
     /// 模型文件說明 => {"model_info""{}}
-    class ModelDocumentInfoInformation: Codable {
+    struct ModelDocumentInfoInformation: Codable {
         
-        public var general_architecture: String
-        public var general_basename: String
-        public var general_file_type: Int
-        public var general_finetune: String
-        public var general_languages: [String]
-        public var general_parameter_count: Int
-        public var general_quantization_version: Int
-        public var general_size_label: String
-        public var general_tags: [String]
-        public var general_type: String
+        public let general_architecture: String
+        public let general_basename: String
+        public let general_file_type: Int
+        public let general_finetune: String
+        public let general_languages: [String]
+        public let general_parameter_count: Int
+        public let general_quantization_version: Int
+        public let general_size_label: String
+        public let general_tags: [String]
+        public let general_type: String
         
-        public var llama_attention_head_count: Int
-        public var llama_attention_head_count_kv: Int
-        public var llama_attention_key_length: Int
-        public var llama_attention_layer_norm_rms_epsilon: Double
-        public var llama_attention_value_length: Int
-        public var llama_block_count: Int
-        public var llama_context_length: Int
-        public var llama_embedding_length: Int
-        public var llama_feed_forward_length: Int
-        public var llama_rope_dimension_count: Int
-        public var llama_rope_freq_base: Int
-        public var llama_vocab_size: Int
+        public let llama_attention_head_count: Int
+        public let llama_attention_head_count_kv: Int
+        public let llama_attention_key_length: Int
+        public let llama_attention_layer_norm_rms_epsilon: Double
+        public let llama_attention_value_length: Int
+        public let llama_block_count: Int
+        public let llama_context_length: Int
+        public let llama_embedding_length: Int
+        public let llama_feed_forward_length: Int
+        public let llama_rope_dimension_count: Int
+        public let llama_rope_freq_base: Int
+        public let llama_vocab_size: Int
         
-        public var tokenizer_ggml_bos_token_id: Int
-        public var tokenizer_ggml_eos_token_id: Int
-        public var tokenizer_ggml_merges: [String]?
-        public var tokenizer_ggml_model: String
-        public var tokenizer_ggml_pre: String
-        public var tokenizer_ggml_token_type: [Int]?
-        public var tokenizer_ggml_tokens: [String]?
+        public let tokenizer_ggml_bos_token_id: Int
+        public let tokenizer_ggml_eos_token_id: Int
+        public let tokenizer_ggml_merges: [String]?
+        public let tokenizer_ggml_model: String
+        public let tokenizer_ggml_pre: String
+        public let tokenizer_ggml_token_type: [Int]?
+        public let tokenizer_ggml_tokens: [String]?
         
         enum CodingKeys: String, CodingKey {
             

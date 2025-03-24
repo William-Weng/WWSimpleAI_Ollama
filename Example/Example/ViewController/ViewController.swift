@@ -17,14 +17,10 @@ final class ViewController: UIViewController {
     @IBOutlet weak var resultTextView: UITextView!
     
     private let baseURL = "http://localhost:11434"
-       
+    
     private var isDismiss = false
     private var response: String = ""
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
+        
     @IBAction func configureModel(_ sender: UIButton) {
         Task { await initLoadModelIntoMemory() }
     }
@@ -56,7 +52,7 @@ extension ViewController: WWEventSource.Delegate {
         case .success(let rawString): sseRawString(eventSource: eventSource, rawString: rawString)
         }
     }
-        
+    
     func serverSentEvents(_ eventSource: WWEventSource, eventValue: WWEventSource.EventValue) {
         print(eventValue)
     }
@@ -118,7 +114,7 @@ private extension ViewController {
     /// - Parameters:
     ///   - prompt: 提問文字
     func liveGenerate(prompt: String) {
-        
+                
         displayHUD()
         
         let urlString = WWSimpleAI.Ollama.API.generate.url()
