@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.1.4"))
+    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.1.5"))
 ]
 ```
 
@@ -26,9 +26,9 @@ dependencies: [
 |download(model:type:timeout:useStream:using:eparator:)|下載模型|
 |configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
 |loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
-|generate(prompt:lastContent:type:timeout:format:images:options:useStream:using:)|一次性回應 - 每次請求都是獨立的|
-|talk(content:type:timeout:format:useStream:images:options:tools:using:)|說話模式 - 會記住之前的對話內容|
-|chat(messages:type:timeout:format:useStream:options:images:tools:using:)|對話模式 - 會記住之前的對話內容|
+|generate(prompt:context:type:timeout:format:images:options:useStream:using:)|一次性回應 (每次請求都是獨立的)|
+|talk(content:type:timeout:format:useStream:images:options:tools:using:)|說話模式 (會記住之前的對話內容)|
+|chat(messages:type:timeout:format:useStream:options:images:tools:using:)|對話模式 (會記住之前的對話內容)|
 |create(newModel:from:personality:type:useStream:using)|建立客製化模型|
 |embed(model:inputs:type:timeout:using:separator:)|從模型生成嵌入文字|
 
