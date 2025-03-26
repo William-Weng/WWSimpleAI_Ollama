@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWEventSource",
       "state" : {
-        "revision" : "68cda6e680a8d66b55cd697e408cb01d1e6ddc64",
-        "version" : "1.3.2"
+        "revision" : "1555c27196c599984db8e0bebc06948a533a5385",
+        "version" : "1.3.3"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWSimpleAI_Ollama",
       "state" : {
-        "revision" : "783f51065e83178a842d8261727a907d894dfc63",
-        "version" : "1.1.4"
+        "revision" : "ffdcb9cf92ba13a32c981599afe7a6246682c7db",
+        "version" : "1.1.5"
       }
     }
   ],

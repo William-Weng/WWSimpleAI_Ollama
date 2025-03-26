@@ -19,7 +19,7 @@ final class ViewController: UIViewController {
     private let baseURL = "http://localhost:11434"
     
     private var isDismiss = false
-    private var response: String = ""
+    private var responseString: String = ""
     
     @IBAction func configureModel(_ sender: UIButton) {
         Task { await initLoadModelIntoMemory() }
@@ -45,11 +45,11 @@ extension ViewController: WWEventSource.Delegate {
         sseStatusAction(eventSource: eventSource, result: result)
     }
     
-    func serverSentEventsRawString(_ eventSource: WWEventSource, result: Result<String, any Error>) {
-        
+    func serverSentEventsRawString(_ eventSource: WWEventSource, result: Result<WWEventSource.RawInformation, any Error>) {
+                
         switch result {
         case .failure(let error): displayText(error)
-        case .success(let rawString): sseRawString(eventSource: eventSource, rawString: rawString)
+        case .success(let rawInformation): sseRawString(eventSource: eventSource, rawInformation: rawInformation)
         }
     }
     
@@ -158,7 +158,6 @@ private extension ViewController {
     
     /// 顯示文字
     /// - Parameter value: Any?
-    @MainActor
     func displayText(_ value: Any?) {
         resultTextView.text = "\(value ?? "")"
     }
@@ -180,7 +179,7 @@ private extension ViewController {
                 WWHUD.shared.dismiss()
                 displayText(error.localizedDescription)
                 isDismiss = true
-                response = ""
+                responseString = ""
             }
             
         case .success(let status):
@@ -188,7 +187,7 @@ private extension ViewController {
             switch status {
             case .connecting: isDismiss = false
             case .open: if !isDismiss { DispatchQueue.main.async { [unowned self] in WWHUD.shared.dismiss(); isDismiss = true }}
-            case .closed: response = ""; isDismiss = false
+            case .closed: responseString = ""; isDismiss = false
             }
         }
     }
@@ -196,20 +195,24 @@ private extension ViewController {
     /// SSE資訊處理
     /// - Parameters:
     ///   - eventSource: WWEventSource
-    ///   - rawString: String
-    func sseRawString(eventSource: WWEventSource, rawString: String) {
+    ///   - rawInformation: WWEventSource.RawInformation
+    func sseRawString(eventSource: WWEventSource, rawInformation: WWEventSource.RawInformation) {
         
-        guard let jsonObject = rawString._data()?._jsonObject() as? [String: Any],
+        defer {
+            DispatchQueue.main.async { [unowned self] in
+                resultTextView.text = responseString
+                resultTextView._autoScrollToBottom()
+            }
+        }
+        
+        if rawInformation.response.statusCode != 200 { responseString = rawInformation.string; return }
+        
+        guard let jsonObject = rawInformation.string._data()?._jsonObject() as? [String: Any],
               let _response = jsonObject["response"] as? String
         else {
             return
         }
         
-        response += _response
-        
-        DispatchQueue.main.async { [unowned self] in
-            resultTextView.text = response
-            resultTextView._autoScrollToBottom()
-        }
+        responseString += _response
     }
 }
