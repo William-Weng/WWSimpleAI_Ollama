@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		8166C86C2D8BF95400AB785A /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 8166C86B2D8BF95400AB785A /* WWSimpleAI_Ollama */; };
 		816F4D612D87F5FC00AE5E6B /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 816F4D602D87F5FC00AE5E6B /* WWSimpleAI_Ollama */; };
 		816F4D672D88066A00AE5E6B /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 816F4D662D88066A00AE5E6B /* WWSimpleAI_Ollama */; };
+		8170D93C2D93B33400BD1127 /* WWSimpleAI_Ollama in Frameworks */ = {isa = PBXBuildFile; productRef = 8170D93B2D93B33400BD1127 /* WWSimpleAI_Ollama */; };
 		817567FC2CA2C2B400B24577 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817567FB2CA2C2B400B24577 /* AppDelegate.swift */; };
 		817568002CA2C2B400B24577 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817567FF2CA2C2B400B24577 /* ViewController.swift */; };
 		817568032CA2C2B400B24577 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 817568012CA2C2B400B24577 /* Main.storyboard */; };
@@ -62,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8170D93C2D93B33400BD1127 /* WWSimpleAI_Ollama in Frameworks */,
 				81BF3D0A2D8972C100A11987 /* WWSimpleAI_Ollama in Frameworks */,
 				81BF3D042D896E0700A11987 /* WWSimpleAI_Ollama in Frameworks */,
 				81BF3CC42D89191500A11987 /* WWSimpleAI_Ollama in Frameworks */,
@@ -227,6 +229,7 @@
 				8166C86B2D8BF95400AB785A /* WWSimpleAI_Ollama */,
 				811DB6212D910B030072DB27 /* WWSimpleAI_Ollama */,
 				811DB6272D910E080072DB27 /* WWSimpleAI_Ollama */,
+				8170D93B2D93B33400BD1127 /* WWSimpleAI_Ollama */,
 			);
 			productName = Example;
 			productReference = 817567F82CA2C2B400B24577 /* Example.app */;
@@ -259,7 +262,7 @@
 			packageReferences = (
 				81AAC18A2D8425510061DB97 /* XCRemoteSwiftPackageReference "WWHUD" */,
 				81BF3CFC2D89649800A11987 /* XCRemoteSwiftPackageReference "WWEventSource" */,
-				811DB6262D910E080072DB27 /* XCLocalSwiftPackageReference "../../WWSimpleAI_Ollama" */,
+				8170D93A2D93B33400BD1127 /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */,
 			);
 			productRefGroup = 817567F92CA2C2B400B24577 /* Products */;
 			projectDirPath = "";
@@ -524,14 +527,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		811DB6262D910E080072DB27 /* XCLocalSwiftPackageReference "../../WWSimpleAI_Ollama" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../WWSimpleAI_Ollama;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		8170D93A2D93B33400BD1127 /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/William-Weng/WWSimpleAI_Ollama";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.3;
+			};
+		};
 		81AAC18A2D8425510061DB97 /* XCRemoteSwiftPackageReference "WWHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/William-Weng/WWHUD";
@@ -545,7 +549,7 @@
 			repositoryURL = "https://github.com/William-Weng/WWEventSource";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 1.3.2;
+				minimumVersion = 1.3.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -577,6 +581,11 @@
 		};
 		816F4D662D88066A00AE5E6B /* WWSimpleAI_Ollama */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = WWSimpleAI_Ollama;
+		};
+		8170D93B2D93B33400BD1127 /* WWSimpleAI_Ollama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8170D93A2D93B33400BD1127 /* XCRemoteSwiftPackageReference "WWSimpleAI_Ollama" */;
 			productName = WWSimpleAI_Ollama;
 		};
 		8194FEC42D87B1E90022F8D1 /* WWSimpleAI_Ollama */ = {

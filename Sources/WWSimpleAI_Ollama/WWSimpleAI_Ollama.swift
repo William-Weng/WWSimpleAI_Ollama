@@ -64,6 +64,7 @@ public extension WWSimpleAI.Ollama {
     /// [一次性回應 - 每次請求都是獨立的](https://github.com/ollama/ollama)
     /// - Parameters:
     ///   - prompt: 提問
+    ///   - lastContent: 上一次的回應記錄
     ///   - type: 回應樣式 => String / Data / JSON
     ///   - format: 回應樣式格式化
     ///   - timeout: 設定請求超時時間
@@ -73,24 +74,26 @@ public extension WWSimpleAI.Ollama {
     ///   - encoding: 文字編碼
     ///   - separator: 分隔號
     /// - Returns: Result<String?, Error>
-    func generate(prompt: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, images: [UIImage]? = nil, options: ResponseOptions? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
+    func generate(prompt: String, lastContent: [Int]? = nil, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, images: [UIImage]? = nil, options: ResponseOptions? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         let api = API.generate
         let format = format?.value() ?? nullValue
         let options = options?.value() ?? nullValue
         let images = images?._base64String(mimeType: .jpeg(compressionQuality: Self.jpegCompressionQuality))._jsonString() ?? nullValue
+        let lastContent = lastContent?._jsonString() ?? nullValue
         
         let json = """
         {
           "model": "\(Self.model)",
           "prompt": "\(prompt)",
           "stream": \(useStream),
+          "context": \(lastContent),
           "format": \(format),
           "options": \(options),
           "images": \(images)
         }
         """
-        
+                
         let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
         
         switch result {
@@ -148,7 +151,7 @@ public extension WWSimpleAI.Ollama {
           "tools": \(tools)
         }
         """
-        
+                
         let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
         
         switch result {

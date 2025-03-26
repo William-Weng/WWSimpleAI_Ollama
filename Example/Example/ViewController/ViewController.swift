@@ -20,7 +20,7 @@ final class ViewController: UIViewController {
     
     private var isDismiss = false
     private var response: String = ""
-        
+    
     @IBAction func configureModel(_ sender: UIButton) {
         Task { await initLoadModelIntoMemory() }
     }
@@ -83,7 +83,7 @@ private extension ViewController {
     func generate(prompt: String) async {
         
         displayHUD()
-
+        
         let result = await WWSimpleAI.Ollama.shared.generate(prompt: prompt)
         
         switch result {
@@ -114,7 +114,7 @@ private extension ViewController {
     /// - Parameters:
     ///   - prompt: 提問文字
     func liveGenerate(prompt: String) {
-                
+        
         displayHUD()
         
         let urlString = WWSimpleAI.Ollama.API.generate.url()

@@ -1,5 +1,5 @@
 {
-  "originHash" : "c8e8d0ca7b3b1e72dd8aabdde2a7d4599d79798d65f1ef5eee789dc01de8a968",
+  "originHash" : "cabbf6f53081ef2afa7982472eae6e544d2ea072537acd6119821e51ebf2c0db",
   "pins" : [
     {
       "identity" : "wweventsource",
@@ -35,6 +35,15 @@
       "state" : {
         "revision" : "5bc5c03259ed28b4c5c6899458fde6ac4d665794",
         "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "wwsimpleai_ollama",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/William-Weng/WWSimpleAI_Ollama",
+      "state" : {
+        "revision" : "49c291a59dec10653f1cb8617bb1b567a04f70d4",
+        "version" : "1.1.3"
       }
     }
   ],
