@@ -45,8 +45,8 @@ extension ViewController: WWEventSource.Delegate {
         sseStatusAction(eventSource: eventSource, result: result)
     }
     
-    func serverSentEventsRawString(_ eventSource: WWEventSource, result: Result<WWEventSource.RawInformation, any Error>) {
-                
+    func serverSentEventsRawData(_ eventSource: WWEventSource, result: Result<WWEventSource.RawInformation, any Error>) {
+        
         switch result {
         case .failure(let error): displayText(error)
         case .success(let rawInformation): sseRawString(eventSource: eventSource, rawInformation: rawInformation)
@@ -205,9 +205,11 @@ private extension ViewController {
             }
         }
         
-        if rawInformation.response.statusCode != 200 { responseString = rawInformation.string; return }
+        if rawInformation.response.statusCode != 200 {
+            responseString = rawInformation.data._string() ?? "\(rawInformation.response.statusCode)"; return
+        }
         
-        guard let jsonObject = rawInformation.string._data()?._jsonObject() as? [String: Any],
+        guard let jsonObject = rawInformation.data._jsonObject() as? [String: Any],
               let _response = jsonObject["response"] as? String
         else {
             return

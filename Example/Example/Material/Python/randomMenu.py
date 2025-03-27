@@ -1,6 +1,5 @@
 import requests, numpy, json, pandas, time, random
 
-from rich import print
 from scipy.spatial.distance import cosine
 from flask import Flask, request, jsonify
 
@@ -112,7 +111,7 @@ def _combineQuestions_(rows: pandas.DataFrame, indexArray: list):
     for index in range(len(rows)):
         row = rows.iloc[index]
 
-        similarity = 1.0        
+        similarity = 1.0
         gpt_q = f'根據 {row.files} 數據，分析{row.gpt_q}'
         user_q = row.user_q
         
@@ -133,7 +132,7 @@ def _randomMenu_(dataFrame: pandas.DataFrame, count: int):
 
 def _combineRandomMenu_(dataFrame: pandas.DataFrame, count: int):
     """
-    從已讀出的CSV檔資訊 => 方便前台處理的格式隨機選單
+    從已讀出的CSV檔資訊 => 方便前台處理格式的隨機選單
 
     參數:
         rows: 已讀出的特定列的CSV檔資訊
@@ -145,7 +144,7 @@ def _combineRandomMenu_(dataFrame: pandas.DataFrame, count: int):
 def questions(input: str, isRefresh: bool, count: int, threshold: float, encoding = 'utf-8', tableName = "question.csv", filename = "vector.json"):
     """
     取得選單問題 => {"result:":{"menu":[<CSV中的選單問題>],"question":[<比較後產生的近似問題>]},"error":<錯誤訊息>}
-    
+
     參數:
         input: 輸入文字
         count: 隨機幾筆選單
@@ -155,14 +154,14 @@ def questions(input: str, isRefresh: bool, count: int, threshold: float, encodin
         filename: 記錄問題向量的JSON檔名
     """
 
-    error = {}
-    randomMenu = []
-    randomQuestions = []
+    error = None
+    randomMenu = None
+    randomQuestions = None
     dataFrame = pandas.read_csv(tableName)
 
     if len(input) == 0:
         randomMenu = _combineRandomMenu_(dataFrame, count)
-        return { "menu": randomMenu, "question": {}, "error": error }
+        return { "menu": randomMenu, "question": None, "error": error }
 
     if isRefresh:
         vectors = _vectorList_(dataFrame)
@@ -176,23 +175,27 @@ def questions(input: str, isRefresh: bool, count: int, threshold: float, encodin
     random.shuffle(questions)
     randomQuestions = questions[:count]
 
-    if not questions:
+    if not randomQuestions:
         randomMenu = _combineRandomMenu_(dataFrame, count)
-        error["message"] = "您所輸入的問題我不太了解，請您再輸入一次…"
+        randomQuestions = None
+        error = {}
+        error["message"] = "我不太了解您所輸入的問題，請您再說明一次…"
     
     return { "result:": {"menu": randomMenu, "question": randomQuestions}, "error": error }
 
 app = Flask(__name__)
 
-# 隨機選單 => 參數：{"input":"<問題>","isRefresh":false,"count":3,"threshold":0.7}
+# 隨機選單
+# => 參數：{"input":"<問題>","isRefresh":false,"count":3,"threshold":0.7}
+# => 結果：{"error":{"message":<錯誤訊息>},"result":{"menu":[<隨機選單>],"question":[<與問題相似的選單>]}}
 @app.route('/menu', methods=['POST'])
 def randomMenu():
     
     input = ""
     isRefresh = False
     count = 3
-    threshold = 0.8
-    
+    threshold = 0.75
+
     if request.is_json:
 
         json = request.json

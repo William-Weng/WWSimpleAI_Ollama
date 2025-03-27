@@ -33,7 +33,7 @@ dependencies: [
 |embed(model:inputs:type:timeout:using:separator:)|從模型生成嵌入文字|
 
 ## [Example](https://ezgif.com/video-to-webp)
-```swift
+```swift/Users/ios/Desktop/WWSimpleAI_Ollama/Package.swift
 import UIKit
 import WWHUD
 import WWEventSource
@@ -173,7 +173,6 @@ private extension ViewController {
     }
 }
 
-// MARK: - SSE (Server Sent Events - 單方向串流)
 private extension ViewController {
     
     func sseStatusAction(eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {

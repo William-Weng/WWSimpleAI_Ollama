@@ -44,7 +44,7 @@ public extension WWSimpleAI.Ollama {
 // MARK: - 公開函式 (應用相關)
 public extension WWSimpleAI.Ollama {
     
-    /// 載入模型到記憶體的設定 - 開/關
+    /// [載入模型到記憶體的設定 - 開/關](https://ithelp.ithome.com.tw/articles/10245198)
     /// - Parameters:
     ///   - api: API類型
     ///   - isLoad: 載入 / 刪除
