@@ -207,7 +207,7 @@ public extension WWSimpleAI.Ollama {
         }
     }
     
-    /// 刪除已下載模型
+    /// [刪除已下載模型](https://www.cnblogs.com/youring2/collections/26533)
     /// - Parameters:
     ///   - model: 模型名稱
     /// - Returns: Result<Bool, Error>

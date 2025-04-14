@@ -71,7 +71,7 @@ private extension ViewController {
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
-        case .success(let responseType): diplayResponse(type: responseType)
+        case .success(let responseType): displayResponse(type: responseType)
         }
         
         WWHUD.shared.dismiss()
@@ -88,7 +88,7 @@ private extension ViewController {
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
-        case .success(let responseType): diplayResponse(type: responseType)
+        case .success(let responseType): displayResponse(type: responseType)
         }
         
         WWHUD.shared.dismiss()
@@ -104,7 +104,7 @@ private extension ViewController {
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
-        case .success(let responseType): diplayResponse(type: responseType)
+        case .success(let responseType): displayResponse(type: responseType)
         }
         
         WWHUD.shared.dismiss()
@@ -141,7 +141,7 @@ private extension ViewController {
     
     /// 顯示AI回應
     /// - Parameter type: WWSimpleOllamaAI.ResponseType
-    func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
+    func displayResponse(type: WWSimpleAI.Ollama.ResponseType) {
         
         switch type {
         case .string(let string): displayText(string)
