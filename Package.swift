@@ -6,13 +6,13 @@ import PackageDescription
 let package = Package(
     name: "WWSimpleAI_Ollama",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v16)
     ],
     products: [
         .library(name: "WWSimpleAI_Ollama", targets: ["WWSimpleAI_Ollama"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/William-Weng/WWNetworking.git", from: "1.7.5"),
+        .package(url: "https://github.com/William-Weng/WWNetworking.git", from: "1.8.13"),
     ],
     targets: [
         .target(name: "WWSimpleAI_Ollama", dependencies: ["WWNetworking"], resources: [.copy("Privacy")]),
