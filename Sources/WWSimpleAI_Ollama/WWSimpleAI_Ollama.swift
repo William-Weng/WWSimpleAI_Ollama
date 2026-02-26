@@ -16,28 +16,13 @@ extension WWSimpleAI {
         @MainActor
         public static let shared = Ollama()
         
-        private(set) public static var baseURL = "http://localhost:11434"
-        private(set) public static var model: String = "gemma:2b"
-        private(set) public static var jpegCompressionQuality = 0.75
+        public var baseURL = "http://localhost:11434"
+        public var model: String = "gemma:3b"
+        public var jpegCompressionQuality = 0.75
         
         private let nullValue = "null"
         
         private init() {}
-    }
-}
-
-// MARK: - 初始值設定 (static function)
-public extension WWSimpleAI.Ollama {
-    
-    /// [相關參數設定](https://ollama.com/)
-    /// - Parameters:
-    ///   - baseURL: API的URL
-    ///   - model: 模型名稱
-    ///   - jpegCompressionQuality: 圖片壓縮率
-    static func configure(baseURL: String, model: String, jpegCompressionQuality: Double = 0.75) {
-        Self.baseURL = baseURL
-        Self.model = model
-        Self.jpegCompressionQuality = jpegCompressionQuality
     }
 }
 
@@ -79,12 +64,12 @@ public extension WWSimpleAI.Ollama {
         let api = API.generate
         let format = format?.value() ?? nullValue
         let options = options?.value() ?? nullValue
-        let images = images?._base64String(mimeType: .jpeg(compressionQuality: Self.jpegCompressionQuality))._jsonString() ?? nullValue
+        let images = images?._base64String(mimeType: .jpeg(compressionQuality: jpegCompressionQuality))._jsonString() ?? nullValue
         let context = context?._jsonString() ?? nullValue
         
         let json = """
         {
-          "model": "\(Self.model)",
+          "model": "\(model)",
           "prompt": "\(prompt)",
           "stream": \(useStream),
           "context": \(context),
@@ -94,7 +79,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
                 
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -116,11 +101,11 @@ public extension WWSimpleAI.Ollama {
     ///   - separator: 分隔號
     /// - Returns: Result<ResponseType, Error>
     func talk(content: String, type: ResponseType = .string, timeout: TimeInterval = 60, format: ResponseFormat? = nil, images: [UIImage]? = nil, options: ResponseOptions? = nil, tools: ResponseTools? = nil, useStream: Bool = false, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
-        let message = MessageInformation(roleType: .user, content: content, images: images, compressionQuality: Self.jpegCompressionQuality)
+        let message = MessageInformation(roleType: .user, content: content, images: images, compressionQuality: jpegCompressionQuality)
         return await chat(messages: [message], timeout: timeout, format: format, options: options, useStream: useStream, using: encoding, separator: separator)
     }
     
-    /// [對話模式 - 會記住之前的對話內容](https://github.com/ollama/ollama/blob/main/docs/api.md)
+    /// [對話模式 - 會記住之前的對話內容](https://ollama.com/)
     /// - Parameters:
     ///   - messages: [[對話內容]](https://dribbble.com/shots/22339104-Crab-Loading-Gif)
     ///   - type: 回應樣式 => String / Data / JSON
@@ -143,7 +128,7 @@ public extension WWSimpleAI.Ollama {
         
         let json = """
         {
-          "model": "\(Self.model)",
+          "model": "\(model)",
           "messages": \(jsonString),
           "stream": \(useStream),
           "format": \(format),
@@ -152,7 +137,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
                 
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), timeout: timeout, httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -187,7 +172,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -221,7 +206,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .DELETE, urlString: api.url(), httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .DELETE, urlString: api.url(for: baseURL), httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -252,7 +237,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -287,7 +272,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), timeout: timeout, httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -329,7 +314,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), timeout: timeout, httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), timeout: timeout, httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -365,7 +350,7 @@ public extension WWSimpleAI.Ollama {
     func version(type: ResponseType = .string, using encoding: String.Encoding = .utf8, separator: String = "") async -> Result<ResponseType, Error> {
         
         let api = API.version
-        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url())
+        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url(for: baseURL))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -378,7 +363,7 @@ public extension WWSimpleAI.Ollama {
     func models() async -> Result<[ModelInformation], Error> {
         
         let api = API.models
-        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url())
+        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url(for: baseURL))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -423,7 +408,7 @@ public extension WWSimpleAI.Ollama {
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), httpBodyType: .string(json))
                 
         switch result {
         case .failure(let error): return .failure(error)
@@ -453,7 +438,7 @@ public extension WWSimpleAI.Ollama {
     func processStatus() async -> Result<[RunningModelInformation], Error> {
         
         let api = API.ps
-        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url())
+        let result = await WWNetworking.shared.request(httpMethod: .GET, urlString: api.url(for: baseURL))
                 
         switch result {
         case .failure(let error): return .failure(error)
@@ -499,12 +484,12 @@ private extension WWSimpleAI.Ollama {
         
         var json = """
         {
-          "model": "\(Self.model)",
+          "model": "\(model)",
           "keep_alive": \(isLoad._int())
         }
         """
         
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)
@@ -525,13 +510,13 @@ private extension WWSimpleAI.Ollama {
         
         var json = """
         {
-          "model": "\(Self.model)",
+          "model": "\(model)",
           "messages": [],
           "keep_alive": \(isLoad._int())
         }
         """
-                
-        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(), httpBodyType: .string(json))
+        
+        let result = await WWNetworking.shared.request(httpMethod: .POST, urlString: api.url(for: baseURL), httpBodyType: .string(json))
         
         switch result {
         case .failure(let error): return .failure(error)

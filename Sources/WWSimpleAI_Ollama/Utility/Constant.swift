@@ -140,7 +140,8 @@ public extension WWSimpleAI.Ollama {
         
         /// 產生完整的URL => http://localhost:11434/api/generate
         /// - Returns: String
-        public func url() -> String {
+        /// - Parameter baseURL: Ollama的Root URL
+        public func url(for baseURL: String) -> String {
             
             let path: String
             
@@ -158,7 +159,7 @@ public extension WWSimpleAI.Ollama {
             case .embed: path = "api/embed"
             }
             
-            return "\(WWSimpleAI.Ollama.baseURL)/\(path)"
+            return "\(baseURL)/\(path)"
         }
     }
     

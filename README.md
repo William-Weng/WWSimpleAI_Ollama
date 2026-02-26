@@ -6,14 +6,19 @@
 - [Simple connection to Ollama API functionality.](https://github.com/ollama/ollama/blob/main/docs/api.md)
 - [簡單連接Ollama API。](https://dribbble.com/shots/22339104-Crab-Loading-Gif)
 
-![](./Example.webp)
-
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.2.0"))
+    .package(url: "https://github.com/William-Weng/WWSimpleAI_Ollama.git", .upToNextMajor(from: "1.2.1"))
 ]
 ```
+
+## [Paramater - 可用參數](https://william-weng.github.io/tags/docker/)
+|函式|功能|
+|-|-|
+|baseURL|Ollama服務器的URL|
+|model|要使用的AI模型名稱|
+|jpegCompressionQuality|傳送圖片的壓縮率|
 
 ## [Function - 可用函式](https://william-weng.github.io/2025/01/docker容器大家一起來當鯨魚搬運工吧/)
 |函式|功能|
@@ -24,7 +29,6 @@ dependencies: [
 |copy(source:destination:)|複製模型|
 |delete(model:)|刪除已下載模型|
 |download(model:type:timeout:useStream:using:eparator:)|下載模型|
-|configure(baseURL:model:jpegCompressionQuality:)|相關參數設定|
 |loadIntoMemory(api:isLoad:type:using:)|載入模型到記憶體的設定 - 開 / 關|
 |generate(prompt:context:type:timeout:format:images:options:useStream:using:)|一次性回應 (每次請求都是獨立的)|
 |talk(content:type:timeout:format:useStream:images:options:tools:using:)|說話模式 (會記住之前的對話內容)|
@@ -33,7 +37,7 @@ dependencies: [
 |embed(model:inputs:type:timeout:using:separator:)|從模型生成嵌入文字|
 
 ## [Example](https://ezgif.com/video-to-webp)
-```swift/Users/ios/Desktop/WWSimpleAI_Ollama/Package.swift
+```swift
 import UIKit
 import WWHUD
 import WWEventSource
@@ -66,14 +70,15 @@ final class ViewController: UIViewController {
     }
 }
 
+// MARK: - WWEventSourceDelegate
 extension ViewController: WWEventSource.Delegate {
     
     func serverSentEventsConnectionStatus(_ eventSource: WWEventSource, result: Result<WWEventSource.ConnectionStatus, any Error>) {
         sseStatusAction(eventSource: eventSource, result: result)
     }
     
-    func serverSentEventsRawString(_ eventSource: WWEventSource, result: Result<WWEventSource.RawInformation, any Error>) {
-                
+    func serverSentEventsRawData(_ eventSource: WWEventSource, result: Result<WWEventSource.RawInformation, any Error>) {
+        
         switch result {
         case .failure(let error): displayText(error)
         case .success(let rawInformation): sseRawString(eventSource: eventSource, rawInformation: rawInformation)
@@ -96,7 +101,7 @@ private extension ViewController {
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
-        case .success(let responseType): diplayResponse(type: responseType)
+        case .success(let responseType): displayResponse(type: responseType)
         }
         
         WWHUD.shared.dismiss()
@@ -110,7 +115,7 @@ private extension ViewController {
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
-        case .success(let responseType): diplayResponse(type: responseType)
+        case .success(let responseType): displayResponse(type: responseType)
         }
         
         WWHUD.shared.dismiss()
@@ -124,7 +129,7 @@ private extension ViewController {
         
         switch result {
         case .failure(let error): displayText(error.localizedDescription)
-        case .success(let responseType): diplayResponse(type: responseType)
+        case .success(let responseType): displayResponse(type: responseType)
         }
         
         WWHUD.shared.dismiss()
@@ -134,10 +139,10 @@ private extension ViewController {
         
         displayHUD()
         
-        let urlString = WWSimpleAI.Ollama.API.generate.url()
+        let urlString = WWSimpleAI.Ollama.API.generate.url(for: baseURL)
         let json = """
         {
-          "model": "\(WWSimpleAI.Ollama.model)",
+          "model": "\(WWSimpleAI.Ollama.shared.model)",
           "prompt": "\(prompt)",
           "stream": true
         }
@@ -147,14 +152,18 @@ private extension ViewController {
     }
 }
 
+// MARK: - 小工具
 private extension ViewController {
     
     func configure() {
+        
         guard let model = modelTextField.text else { return }
-        WWSimpleAI.Ollama.configure(baseURL: baseURL, model: model)
+        
+        WWSimpleAI.Ollama.shared.baseURL = baseURL
+        WWSimpleAI.Ollama.shared.model = model
     }
     
-    func diplayResponse(type: WWSimpleAI.Ollama.ResponseType) {
+    func displayResponse(type: WWSimpleAI.Ollama.ResponseType) {
         
         switch type {
         case .string(let string): displayText(string)
@@ -180,18 +189,16 @@ private extension ViewController {
         switch result {
         case .failure(let error):
             
-            DispatchQueue.main.async { [unowned self] in
-                WWHUD.shared.dismiss()
-                displayText(error.localizedDescription)
-                isDismiss = true
-                responseString = ""
-            }
+            WWHUD.shared.dismiss()
+            displayText(error.localizedDescription)
+            isDismiss = true
+            responseString = ""
             
         case .success(let status):
             
             switch status {
             case .connecting: isDismiss = false
-            case .open: if !isDismiss { DispatchQueue.main.async { [unowned self] in WWHUD.shared.dismiss(); isDismiss = true }}
+            case .open: if !isDismiss { WWHUD.shared.dismiss(); isDismiss = true }
             case .closed: responseString = ""; isDismiss = false
             }
         }
@@ -200,15 +207,15 @@ private extension ViewController {
     func sseRawString(eventSource: WWEventSource, rawInformation: WWEventSource.RawInformation) {
         
         defer {
-            DispatchQueue.main.async { [unowned self] in
-                resultTextView.text = responseString
-                resultTextView._autoScrollToBottom()
-            }
+            resultTextView.text = responseString
+            resultTextView._autoScrollToBottom()
         }
         
-        if rawInformation.response.statusCode != 200 { responseString = rawInformation.string; return }
+        if rawInformation.response.statusCode != 200 {
+            responseString = rawInformation.data._string() ?? "\(rawInformation.response.statusCode)"; return
+        }
         
-        guard let jsonObject = rawInformation.string._data()?._jsonObject() as? [String: Any],
+        guard let jsonObject = rawInformation.data._jsonObject() as? [String: Any],
               let _response = jsonObject["response"] as? String
         else {
             return

@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWEventSource",
       "state" : {
-        "revision" : "6ea3d939a84cea2391098d9519e4fca0efd7bb13",
-        "version" : "1.4.1"
+        "revision" : "029562b9a32cd5a6899c3d343dbf5a3825c77981",
+        "version" : "1.4.2"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWHUD",
       "state" : {
-        "revision" : "bbdff687c88964328b17002bdf347451117355f5",
-        "version" : "1.5.1"
+        "revision" : "8ffa449fd2192fdfd06622b77659edd65b4edd18",
+        "version" : "1.6.0"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWNetworking.git",
       "state" : {
-        "revision" : "188f716e63171e4f391423d79cb20ed3304abe1e",
-        "version" : "1.8.13"
+        "revision" : "2c7ce462a79c7c894dbb20dfa766b3eada9d2644",
+        "version" : "1.9.0"
       }
     },
     {
@@ -42,8 +42,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWSimpleAI_Ollama",
       "state" : {
-        "revision" : "c411cdd0e305c286f6a35e1029c9aa31e5a25d55",
-        "version" : "1.1.7"
+        "revision" : "0e0c0e2ecfc9b6cb9db151d1d4dfa5b7a190fa87",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "wwsvgimageview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/William-Weng/WWSVGImageView",
+      "state" : {
+        "revision" : "c3118da8460fb998d7436f9912e70cda9a796327",
+        "version" : "1.0.2"
       }
     }
   ],

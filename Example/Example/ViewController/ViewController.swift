@@ -16,7 +16,7 @@ final class ViewController: UIViewController {
     @IBOutlet weak var modelTextField: UITextField!
     @IBOutlet weak var resultTextView: UITextView!
     
-    private let baseURL = "http://localhost:11434"
+    private let baseURL = "http://192.168.1.20:11434"
     
     private var isDismiss = false
     private var responseString: String = ""
@@ -117,10 +117,10 @@ private extension ViewController {
         
         displayHUD()
         
-        let urlString = WWSimpleAI.Ollama.API.generate.url()
+        let urlString = WWSimpleAI.Ollama.API.generate.url(for: baseURL)
         let json = """
         {
-          "model": "\(WWSimpleAI.Ollama.model)",
+          "model": "\(WWSimpleAI.Ollama.shared.model)",
           "prompt": "\(prompt)",
           "stream": true
         }
@@ -135,8 +135,11 @@ private extension ViewController {
     
     /// 設定模型
     func configure() {
+        
         guard let model = modelTextField.text else { return }
-        WWSimpleAI.Ollama.configure(baseURL: baseURL, model: model)
+        
+        WWSimpleAI.Ollama.shared.baseURL = baseURL
+        WWSimpleAI.Ollama.shared.model = model
     }
     
     /// 顯示AI回應
@@ -175,18 +178,16 @@ private extension ViewController {
         switch result {
         case .failure(let error):
             
-            DispatchQueue.main.async { [unowned self] in
-                WWHUD.shared.dismiss()
-                displayText(error.localizedDescription)
-                isDismiss = true
-                responseString = ""
-            }
+            WWHUD.shared.dismiss()
+            displayText(error.localizedDescription)
+            isDismiss = true
+            responseString = ""
             
         case .success(let status):
             
             switch status {
             case .connecting: isDismiss = false
-            case .open: if !isDismiss { DispatchQueue.main.async { [unowned self] in WWHUD.shared.dismiss(); isDismiss = true }}
+            case .open: if !isDismiss { WWHUD.shared.dismiss(); isDismiss = true }
             case .closed: responseString = ""; isDismiss = false
             }
         }
@@ -199,10 +200,8 @@ private extension ViewController {
     func sseRawString(eventSource: WWEventSource, rawInformation: WWEventSource.RawInformation) {
         
         defer {
-            DispatchQueue.main.async { [unowned self] in
-                resultTextView.text = responseString
-                resultTextView._autoScrollToBottom()
-            }
+            resultTextView.text = responseString
+            resultTextView._autoScrollToBottom()
         }
         
         if rawInformation.response.statusCode != 200 {
