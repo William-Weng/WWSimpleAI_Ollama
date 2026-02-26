@@ -16,7 +16,7 @@ final class ViewController: UIViewController {
     @IBOutlet weak var modelTextField: UITextField!
     @IBOutlet weak var resultTextView: UITextView!
     
-    private let baseURL = "http://192.168.1.20:11434"
+    private let baseURL = "http://localhost:11434"
     
     private var isDismiss = false
     private var responseString: String = ""
